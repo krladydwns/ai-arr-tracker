@@ -12,15 +12,16 @@ OpenAI·Anthropic·Google(Gemini)·xAI·Mistral·Cohere·DeepSeek·Moonshot·Z.a
 | `index.html` | **빌드 결과물(배포 대상).** 단독으로 열어도 동작 |
 | `exports/` | 월별 ARR CSV, 출처 로그 CSV, 산업 시계열 CSV (사이트의 내려받기 링크 대상) |
 | `scripts/update_monthly.py` | 매월 1일 자동 실행: Epoch AI 데이터셋에서 새 보고 수집 → `data.json`에 '검토 필요' 표시로 추가 → 날짜 메타·변경 이력 갱신 |
-| `.github/workflows/monthly-update.yml` | GitHub Actions: 매월 1일 갱신 + 빌드 + GitHub Pages 배포 (push 시에도 빌드·배포) |
+| `.github/workflows/monthly-update.yml` | GitHub Actions: 매월 1일 갱신 + 빌드 + `gh-pages` 브랜치 배포 (push 시에도 빌드·배포) |
 | `fonts/` | 내장용 웹폰트(Barlow Semi Condensed, IBM Plex Mono — OFL) |
 
 ## 1. 공개하기 (GitHub Pages, 무료)
 
 1. GitHub에서 새 저장소를 만들고 이 폴더 전체를 올립니다(`main` 브랜치).
-2. 저장소 **Settings → Pages → Build and deployment → Source** 를 **GitHub Actions** 로 선택합니다.
-3. **Actions** 탭에서 `monthly-update-and-deploy` 워크플로를 한 번 수동 실행(Run workflow)하거나, 아무 커밋이나 push 합니다.
-4. 1~2분 뒤 `https://<계정명>.github.io/<저장소명>/` 에서 사이트가 열립니다. 커스텀 도메인은 Settings → Pages에서 연결.
+2. **Actions** 탭에서 `monthly-update-and-deploy` 워크플로를 한 번 실행(Run workflow)하거나 아무 커밋이나 push 합니다. 워크플로가 빌드 결과를 `gh-pages` 브랜치에 올리고, GitHub이 그 브랜치를 자동으로 Pages로 공개합니다(Settings → Pages에서 Source가 `gh-pages` / root 인지 확인).
+3. 1~2분 뒤 `https://<계정명>.github.io/<저장소명>/` 에서 사이트가 열립니다. 커스텀 도메인은 Settings → Pages에서 연결.
+
+현재 공개 주소: **https://krladydwns.github.io/ai-arr-tracker/**
 
 Netlify/Vercel/Cloudflare Pages를 쓴다면 빌드 명령 `python3 build.py`, 공개 폴더는 저장소 루트(`index.html`, `exports/`)로 지정하면 됩니다. 가장 단순하게는 `index.html`과 `exports/` 폴더만 아무 정적 호스팅에 올려도 됩니다.
 
@@ -28,7 +29,7 @@ Netlify/Vercel/Cloudflare Pages를 쓴다면 빌드 명령 `python3 build.py`, �
 
 워크플로가 매월 1일 00:15 UTC(한국 09:15)에 실행되어:
 
-- **자동**: Epoch AI의 [AI companies revenue reports](https://epoch.ai/data/ai_companies_revenue_reports.csv)(CC-BY)에서 회사별 마지막 포인트 이후의 새 보고(신뢰도 Confident/Likely, 전사 기준)를 가져와 `data.json`에 추가합니다. 추가된 포인트는 사이트 출처 로그에 **'검토 필요'** 배지로 표시됩니다. 날짜 메타(마지막 업데이트·데이터 기준월·다음 업데이트)와 변경 이력도 갱신되고, 사이트가 다시 빌드·배포됩니다. 새 보고가 없어도 '최근값 유지' 기간이 한 달 연장된 상태로 재배포됩니다.
+- **자동**: Epoch AI의 [AI companies revenue reports](https://epoch.ai/data/ai_companies_revenue_reports.csv)(CC-BY)에서 회사별 마지막 포인트 이후의 새 보고(신뢰도 Confident/Likely, 전사 기준)를 가져와 `data.json`에 추가합니다. 추가된 포인트는 사이트 출처 로그에 **'검토 필요'** 배지로 표시됩니다. 날짜 메타(마지막 업데이트·데이터 기준월·다음 업데이트)와 변경 이력도 갱신되어 `main`에 커밋되고, 사이트가 다시 빌드되어 `gh-pages`로 배포됩니다. 새 보고가 없어도 '최근값 유지' 기간이 한 달 연장된 상태로 재배포됩니다.
 - **수동(분기 1회 권장, 1·4·7·10월 말 실적 시즌 후)**:
   - Google 추정 입력값: Alphabet 실적의 API 토큰/분, Gemini 구독·Enterprise 시트 → `data.json`의 `google.points`에 새 `estimate` 포인트 추가(`range` 포함).
   - Microsoft AI 런레이트(공시 시), Meta 구독 매출(공개 시).
