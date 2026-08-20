@@ -12,7 +12,7 @@
 
 사용: python3 scripts/update_monthly.py [--dry-run] [--csv path]
 """
-import csv, io, json, sys, datetime as dt, urllib.request
+import csv, io, json, re, sys, datetime as dt, urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -22,7 +22,7 @@ EPOCH_URL = "https://epoch.ai/data/ai_companies_revenue_reports.csv"
 NAME_MAP = {
     "anthropic": "anthropic", "openai": "openai", "xai": "xai", "mistral": "mistral", "mistral ai": "mistral",
     "cohere": "cohere", "deepseek": "deepseek", "moonshot": "moonshot", "moonshot ai": "moonshot",
-    "zhipu": "zhipu", "zhipu ai": "zhipu", "z.ai": "zhipu", "microsoft": "microsoft",
+    "zhipu": "zhipu", "zhipu ai": "zhipu", "z.ai": "zhipu", "z.ai (zhipu)": "zhipu", "microsoft": "microsoft",
 }
 MIN_CONFIDENCE = {"confident", "likely"}  # Epoch 'Confidence' 열 기준 (Speculative 제외)
 
@@ -38,7 +38,7 @@ def main():
     csv_path = sys.argv[sys.argv.index("--csv") + 1] if "--csv" in sys.argv else None
     data = json.loads(DATA_PATH.read_text(encoding="utf-8"))
     by_id = {c["id"]: c for c in data["companies"]}
-    today = dt.date.today()
+    today = (dt.datetime.now(dt.timezone.utc) + dt.timedelta(hours=9)).date()  # KST 기준 날짜
     report = [f"# 월간 업데이트 보고서 {today.isoformat()}", ""]
 
     try:
@@ -52,7 +52,12 @@ def main():
         rows = list(csv.DictReader(io.StringIO(text)))
         for r in rows:
             name = (r.get("Company") or "").strip()
-            cid = NAME_MAP.get(name.lower())
+            key = re.sub(r"\s*\(.*?\)\s*", " ", name.lower()).strip()  # "Z.ai (Zhipu)" -> "z.ai"
+            cid = NAME_MAP.get(key) or NAME_MAP.get(name.lower())
+            if not cid:
+                for k, v in NAME_MAP.items():
+                    if k in key.split() or key.startswith(k + " "):
+                        cid = v; break
             if not cid:
                 unknown.add(name); continue
             if (r.get("Annualized revenue type") or "").lower().find("run rate") < 0 and (r.get("Annualized revenue type") or "") != "":
