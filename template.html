@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI 모델 기업 ARR 트래커 — 연환산 매출과 산업사 비교</title>
+<meta name="description" content="OpenAI·Anthropic·Google·xAI·Meta 등 AI 모델 기업의 연환산 매출(ARR)을 월 단위로 추적하고, 철도·전기·전화·자동차·제약·인터넷 등 과거 산업의 성장 곡선과 비교합니다. 매월 1일 갱신.">
+<meta property="og:title" content="AI 모델 기업 ARR 트래커">
+<meta property="og:description" content="AI 랩 합산 ARR과 100년 산업 성장 곡선의 비교. 매월 1일 갱신.">
+<style>
+/*__FONTS__*/
+:root{
+  --bg:#F4F6F8; --surface:#FFFFFF; --ink:#0F1B2D; --ink-2:#3D4A5C; --ink-3:#6B7787; --ink-4:#98A2B0;
+  --line:#DCE1E7; --line-2:#EDF0F3; --grid:#E4E8ED; --grid-2:#F0F2F5;
+  --display:'Barlow Semi Condensed', -apple-system, "Segoe UI", sans-serif;
+  --mono:'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --body:-apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR", "Malgun Gothic", "Segoe UI", Roboto, sans-serif;
+  --max:1120px; --pad:20px; --radius:6px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.65;word-break:keep-all;overflow-wrap:anywhere}
+a{color:inherit;text-decoration:underline;text-decoration-color:var(--ink-4);text-underline-offset:3px}
+a:hover{text-decoration-color:var(--ink)}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.disp{font-family:var(--display);font-weight:600;letter-spacing:-0.01em}
+
+/* ---------- header ---------- */
+header.top{border-bottom:1px solid var(--line);background:var(--surface)}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0}
+.brand{display:flex;align-items:baseline;gap:10px}
+.brand .logo{font-family:var(--display);font-weight:600;font-size:20px;letter-spacing:.02em}
+.brand .logo small{font-weight:500;color:var(--ink-3);font-size:13px;margin-left:8px}
+nav.sec{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
+nav.sec::-webkit-scrollbar{display:none}
+nav.sec a{white-space:nowrap;font-size:13px;color:var(--ink-2);text-decoration:none;padding:6px 10px;border-radius:999px}
+nav.sec a:hover{background:var(--line-2);color:var(--ink)}
+.hero{padding:40px 0 8px}
+.hero h1{font-size:34px;line-height:1.2;margin:0 0 12px;font-weight:700;letter-spacing:-0.02em}
+.hero h1 .disp{font-size:1.1em}
+.hero p.lede{font-size:16px;color:var(--ink-2);max-width:760px;margin:0 0 16px}
+.meta-chips{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:12.5px;color:var(--ink-3)}
+.meta-chips span b{color:var(--ink);font-weight:600}
+.meta-chips .num{font-size:12px}
+
+/* ---------- sections ---------- */
+section{padding:44px 0 8px}
+section h2{font-size:24px;margin:0 0 6px;letter-spacing:-0.015em;line-height:1.3}
+section h2 .idx{font-family:var(--display);color:var(--ink-4);font-weight:600;margin-right:10px;font-size:.85em}
+section .sub{color:var(--ink-3);margin:0 0 18px;font-size:14.5px;max-width:800px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius)}
+.chart-card{padding:16px 16px 10px}
+.chart-head{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:10px 16px;margin-bottom:6px}
+.chart-title{font-weight:700;font-size:15.5px;margin:0}
+.chart-title small{display:block;font-weight:400;color:var(--ink-3);font-size:12.5px;margin-top:2px}
+.controls{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:2px;background:var(--bg)}
+.seg button{font-size:12px;padding:4px 10px;border-radius:999px;color:var(--ink-3);line-height:1.4}
+.seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.chart{position:relative;width:100%;min-height:280px}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart .tip{position:absolute;pointer-events:none;background:rgba(15,27,45,.96);color:#fff;font-size:12px;line-height:1.5;padding:8px 10px;border-radius:6px;min-width:150px;max-width:260px;opacity:0;transition:opacity .08s;z-index:5;box-shadow:0 6px 18px rgba(15,27,45,.18)}
+.chart .tip .h{font-family:var(--mono);font-size:11.5px;color:#C9D1DC;margin-bottom:4px;padding-bottom:4px;border-bottom:1px solid rgba(255,255,255,.15)}
+.chart .tip .r{display:flex;justify-content:space-between;gap:14px;white-space:nowrap}
+.chart .tip .r i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px;vertical-align:0}
+.chart .tip .r .v{font-family:var(--mono)}
+.chart .tip .r.tot{margin-top:4px;padding-top:4px;border-top:1px solid rgba(255,255,255,.15);font-weight:600}
+.legend{display:flex;flex-wrap:wrap;gap:4px 6px;margin-top:8px;padding-top:10px;border-top:1px solid var(--line-2)}
+.legend button{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-2);padding:3px 8px;border-radius:999px;border:1px solid transparent}
+.legend button:hover{background:var(--line-2)}
+.legend button i{width:10px;height:10px;border-radius:3px;display:inline-block;flex:none}
+.legend button.off{color:var(--ink-4);text-decoration:line-through}
+.legend button.off i{opacity:.25}
+.legend .sep{width:1px;background:var(--line);margin:0 4px}
+.legend .all{color:var(--ink-3)}
+.note{font-size:12.5px;color:var(--ink-3);margin:10px 0 0;line-height:1.6}
+.note b{color:var(--ink-2)}
+.insight{margin-top:18px;padding:16px 18px;border-left:3px solid var(--ink);background:var(--surface);border-radius:0 var(--radius) var(--radius) 0}
+.insight h3{margin:0 0 8px;font-size:14.5px}
+.insight p{margin:0 0 8px;font-size:14px;color:var(--ink-2)}
+.insight p:last-child{margin:0}
+.insight ul{margin:0;padding-left:18px;font-size:14px;color:var(--ink-2)}
+.insight li{margin:3px 0}
+
+/* ---------- hero chart ---------- */
+.thesis{margin-top:22px}
+.rank{display:flex;flex-wrap:wrap;gap:6px 8px;margin-top:12px}
+.rank span{font-size:12.5px;padding:4px 9px;border-radius:999px;background:var(--surface);border:1px solid var(--line);color:var(--ink-2)}
+.rank span b{font-family:var(--mono);font-weight:600;color:var(--ink)}
+.rank span.ai{background:var(--ink);color:#fff;border-color:var(--ink)}
+.rank span.ai b{color:#fff}
+
+/* ---------- KPI ---------- */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:22px}
+.kpi{padding:16px 16px 14px}
+.kpi .l{font-size:12.5px;color:var(--ink-3)}
+.kpi .v{font-family:var(--display);font-weight:600;font-size:38px;line-height:1.05;margin:6px 0 4px;letter-spacing:-0.02em}
+.kpi .v small{font-size:16px;color:var(--ink-3);font-weight:500;margin-left:4px}
+.kpi .d{font-size:12.5px;color:var(--ink-3)}
+.kpi .d b{color:var(--ink-2)}
+
+/* ---------- tables ---------- */
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface)}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:13px}
+th,td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--line-2);white-space:nowrap}
+th{font-weight:600;color:var(--ink-2);background:var(--bg);position:sticky;top:0;z-index:2;font-size:12.5px}
+th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:var(--surface);z-index:1;box-shadow:1px 0 0 var(--line-2)}
+th:first-child{z-index:3;background:var(--bg)}
+td.num{font-family:var(--mono);font-size:12.5px}
+td.rep{font-weight:600;color:var(--ink)}
+td.est{color:var(--ink-2);font-style:italic}
+td.interp{color:var(--ink-3)}
+td.carry{color:var(--ink-4)}
+td.na{color:var(--ink-4)}
+td.tot{font-weight:700;background:#FAFBFC}
+tr:hover td{background:#F7F9FB}
+tr:hover td:first-child{background:#F7F9FB}
+.tbl-foot{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin-top:10px;font-size:12.5px;color:var(--ink-3)}
+.tbl-foot .key{display:inline-flex;align-items:center;gap:6px}
+.tbl-foot .key i{display:inline-block;padding:0 6px;font-style:normal;font-family:var(--mono);font-size:11px;border-radius:3px;border:1px solid var(--line);background:var(--surface);white-space:nowrap}
+.btn{font-size:12.5px;padding:5px 11px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink-2)}
+.btn:hover{border-color:var(--ink-3);color:var(--ink)}
+.src a{font-size:12px;color:var(--ink-2)}
+.kind{display:inline-block;font-size:11px;padding:1px 6px;border-radius:3px;background:var(--line-2);color:var(--ink-2)}
+.kind.disclosure{background:#E6F4EA;color:#1E6B3A}
+.kind.media{background:#E8F0FE;color:#1A4FB4}
+.kind.estimate,.kind.derived{background:#FFF4E0;color:#9A5B00}
+.mile td.num{font-size:12.5px}
+.mile td:first-child{font-weight:600}
+.mile tr.ai td{background:#F1F3F6;font-weight:600}
+
+/* ---------- prose ---------- */
+.prose{max-width:820px;font-size:14.5px;color:var(--ink-2)}
+.prose h3{font-size:15.5px;color:var(--ink);margin:22px 0 6px}
+.prose p{margin:0 0 10px}
+.prose ul{padding-left:18px;margin:0 0 10px}
+.prose li{margin:3px 0}
+.prose code{font-family:var(--mono);font-size:12.5px;background:var(--line-2);padding:1px 5px;border-radius:3px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.cos{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
+.co{padding:12px 14px;font-size:13px;color:var(--ink-2)}
+.co b{display:flex;align-items:center;gap:8px;color:var(--ink);font-size:13.5px;margin-bottom:4px}
+.co b i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.co .st{font-family:var(--mono);font-size:12px;color:var(--ink-3);margin-left:auto;text-align:right}
+.co b{flex-wrap:wrap}
+.co b .nm{white-space:nowrap}
+footer{margin:60px 0 40px;padding-top:20px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink-3)}
+footer p{margin:4px 0}
+
+/* ---------- responsive ---------- */
+@media (max-width:900px){
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .cols{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+  :root{--pad:14px}
+  body{font-size:14.5px}
+  .topbar{flex-direction:column;align-items:flex-start;gap:8px;padding:12px 0 8px}
+  nav.sec{width:calc(100% + 28px);margin:0 -14px;padding:0 14px}
+  .hero{padding:26px 0 4px}
+  .hero h1{font-size:26px}
+  .hero p.lede{font-size:15px}
+  section{padding:34px 0 4px}
+  section h2{font-size:20px}
+  .kpis{gap:8px}
+  .kpi{padding:12px 12px 10px}
+  .kpi .v{font-size:30px}
+  .chart-card{padding:12px 8px 8px}
+  .chart{min-height:240px}
+  .cos{grid-template-columns:1fr}
+  th,td{padding:7px 8px}
+  .insight{padding:14px 14px}
+  .co .st{flex-basis:100%;margin-left:18px;text-align:left;font-size:11.5px}
+}
+@media (prefers-reduced-motion:no-preference){
+  .draw path.line{stroke-dasharray:var(--len);stroke-dashoffset:var(--len);animation:draw 1.4s ease-out forwards}
+  @keyframes draw{to{stroke-dashoffset:0}}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap topbar">
+    <div class="brand"><span class="logo">AI ARR TRACKER<small>AI 모델 기업 연환산 매출 추적</small></span></div>
+    <nav class="sec" aria-label="섹션">
+      <a href="#thesis">비교 요약</a><a href="#companies">기업별 ARR</a><a href="#total">합산</a><a href="#table">월별 표·출처</a><a href="#industries">산업 비교</a><a href="#method">방법론</a><a href="#update">업데이트</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="hero">
+    <h1>AI 모델 기업 합산 ARR, <span class="disp num" id="h-total">—</span>. <br>철도·전기·인터넷이 수십 년 걸린 길을 몇 달 만에.</h1>
+    <p class="lede">OpenAI·Anthropic·Google(Gemini)·xAI·Meta·Mistral 등 AI 모델 기업의 연환산 매출(ARR)을 월 단위로 모아 보고, 같은 실질 달러·로그 축 위에 지난 170년간 주요 산업의 성장과 성숙의 꺾임을 겹쳐 봅니다.</p>
+    <div class="meta-chips" id="meta-chips"></div>
+  </div>
+
+  <!-- ===== 0. Thesis chart ===== -->
+  <section id="thesis" class="thesis" style="padding-top:18px">
+    <h2><span class="idx">01</span>$10B에서 $100B까지: 산업사 위에 올려 본 AI</h2>
+    <p class="sub">가로축은 각 산업이 <b>실질 기준(2024년 달러) 연매출 $10B</b>를 처음 넘긴 시점을 0으로 맞춘 경과 연수, 세로축은 실질 연매출(로그). 곡선이 눕기 시작하는 지점이 ‘성숙기의 꺾임’입니다. 검은 선이 AI 모델 랩 합산 ARR.</p>
+    <div class="card chart-card">
+      <div class="chart-head">
+        <p class="chart-title">$10B 돌파 후 경과 연수 vs 실질 연매출<small>실질 2024 USD · 로그 스케일 · AI는 월별 ARR, 산업은 연간 매출</small></p>
+        <div class="controls">
+          <div class="seg" id="hero-x"><button data-v="cross" aria-pressed="true">$10B 돌파 기준</button><button data-v="t0" aria-pressed="false">상용화 원년 기준</button></div>
+          <div class="seg" id="hero-r"><button data-v="zoom" aria-pressed="true">60년 구간</button><button data-v="all" aria-pressed="false">전체</button></div>
+        </div>
+      </div>
+      <div class="chart" id="c-hero"></div>
+      <div class="legend" id="l-hero"></div>
+      <p class="note" id="hero-note"></p>
+    </div>
+    <div class="rank" id="rank"></div>
+    <div class="insight" id="hero-insight"></div>
+  </section>
+
+  <!-- ===== KPI ===== -->
+  <div class="kpis" id="kpis"></div>
+
+  <!-- ===== 1. Companies ===== -->
+  <section id="companies">
+    <h2><span class="idx">02</span>기업별 ARR — 월별, 절대 시간축</h2>
+    <p class="sub">보고·공시된 시점은 점으로, 그 사이 달은 로그 선형 보간, 마지막 보고 이후는 점선(최근값 유지)으로 표시합니다. Google은 비공시라 자체 추정(속이 빈 점), Microsoft AI는 플랫폼 매출이라 참고선입니다.</p>
+    <div class="card chart-card">
+      <div class="chart-head">
+        <p class="chart-title">연환산 매출(ARR) 추이<small id="c-comp-sub"></small></p>
+        <div class="controls">
+          <div class="seg" id="comp-y"><button data-v="log" aria-pressed="true">로그</button><button data-v="linear" aria-pressed="false">선형</button></div>
+          <div class="seg" id="comp-group"><button data-v="all" aria-pressed="true">전체</button><button data-v="lab" aria-pressed="false">모델 랩만</button></div>
+        </div>
+      </div>
+      <div class="chart" id="c-comp"></div>
+      <div class="legend" id="l-comp"></div>
+      <p class="note">● 공시·보도 시점 &nbsp; ○ 추정치 &nbsp; 점선 = 마지막 보고값 유지(최대 12개월) &nbsp;·&nbsp; ARR은 최근 월 매출×12 등 회사마다 정의가 달라 직접 비교에는 주의가 필요합니다.</p>
+    </div>
+    <div class="cos" id="cos"></div>
+    <div class="insight" id="comp-insight"></div>
+  </section>
+
+  <!-- ===== 2. Total ===== -->
+  <section id="total">
+    <h2><span class="idx">03</span>합산 ARR과 점유 구조</h2>
+    <p class="sub">모델 랩 합산(기본)은 공시·보도 기반 기업만 더한 값입니다. ‘Google 추정 포함’은 자체 추정치를 더한 값으로, 실제 총량의 상한 감각을 위한 참고입니다.</p>
+    <div class="card chart-card">
+      <div class="chart-head">
+        <p class="chart-title">합산 ARR 추이<small>월별 · 검은 선 = 모델 랩 합산, 회색 점선 = Google 추정 포함</small></p>
+        <div class="controls"><div class="seg" id="tot-y"><button data-v="log" aria-pressed="true">로그</button><button data-v="linear" aria-pressed="false">선형</button></div></div>
+      </div>
+      <div class="chart" id="c-total"></div>
+      <p class="note" id="tot-note"></p>
+    </div>
+    <div class="card chart-card" style="margin-top:12px">
+      <div class="chart-head"><p class="chart-title">합산 내 점유율<small>모델 랩 합산 대비 비중 · 월별</small></p></div>
+      <div class="chart" id="c-share"></div>
+      <div class="legend" id="l-share"></div>
+      <p class="note">각 회사는 첫 보고 시점부터 합산에 포함됩니다(Anthropic 2023년 10월, xAI 2024년 11월 등). 그 이전 달은 0으로 계산되므로 초기 구간의 ‘기타’·Anthropic 비중은 과소 표시됩니다.</p>
+    </div>
+    <div class="insight" id="tot-insight"></div>
+  </section>
+
+  <!-- ===== 3. Table ===== -->
+  <section id="table">
+    <h2><span class="idx">04</span>월별 표와 출처 로그</h2>
+    <p class="sub">굵은 글씨는 해당 월에 공시·보도가 있었던 값, 일반 글씨는 보간, 기울임은 추정, 옅은 글씨는 최근값 유지. 표를 좌우로 스크롤할 수 있습니다.</p>
+    <div class="tbl-wrap" id="t-month"></div>
+    <div class="tbl-foot">
+      <span class="key"><i><b>굵게</b></i> 보고·공시</span><span class="key"><i>일반</i> 보간</span><span class="key"><i><em>기울임</em></i> 추정</span><span class="key"><i style="color:var(--ink-4)">옅게</i> 최근값 유지</span>
+      <button class="btn" id="t-month-more">전체 기간 보기</button>
+      <a class="btn" href="exports/arr_monthly.csv" download>CSV 내려받기</a>
+    </div>
+    <h3 style="margin:28px 0 8px;font-size:16px">출처 로그 — 모든 데이터 포인트</h3>
+    <p class="sub" style="margin-bottom:10px">공시(회사 발표)와 보도(익명 소식통 포함)를 구분합니다. 링크는 원문(유료 매체 포함).</p>
+    <div class="tbl-wrap" id="t-src"></div>
+    <div class="tbl-foot"><button class="btn" id="t-src-more">전체 보기</button><a class="btn" href="exports/arr_sources.csv" download>출처 CSV</a></div>
+  </section>
+
+  <!-- ===== 4. Industries ===== -->
+  <section id="industries">
+    <h2><span class="idx">05</span>산업 비교 — 성장과 성숙기의 꺾임</h2>
+    <p class="sub">철도(1830~)·전력(1882~)·전화(1877~)·자동차(1896~)·제약·무선통신·인터넷 광고·전자상거래·클라우드·스마트폰. 명목 달러는 시대별 물가가 달라 실질(2024 USD)과 미국 GDP 대비 비중으로도 볼 수 있습니다.</p>
+    <div class="card chart-card">
+      <div class="chart-head">
+        <p class="chart-title">절대 시간축 — 1850년부터 오늘까지<small id="ind-abs-sub">연간 매출 · 로그 스케일</small></p>
+        <div class="controls">
+          <div class="seg" id="ind-unit"><button data-v="nominal" aria-pressed="false">명목</button><button data-v="real" aria-pressed="true">실질 2024$</button><button data-v="gdp" aria-pressed="false">미국 GDP 대비 %</button></div>
+        </div>
+      </div>
+      <div class="chart" id="c-ind-abs"></div>
+      <div class="legend" id="l-ind-abs"></div>
+      <p class="note">AI 선은 모델 랩 합산 ARR(월별). 글로벌 시계열(클라우드·스마트폰)은 미국 GDP 대비 비중 해석 시 과대 평가되므로 참고용입니다.</p>
+    </div>
+
+    <div class="card chart-card" style="margin-top:12px">
+      <div class="chart-head">
+        <p class="chart-title">상대 시간축 — 상용화 원년을 0으로 맞춘 성장 곡선<small>실질 2024 USD · 로그 스케일</small></p>
+      </div>
+      <div class="chart" id="c-ind-rel"></div>
+      <div class="legend" id="l-ind-rel"></div>
+      <p class="note">원년 정의: 철도 B&amp;O 개통(1830), 전력 Pearl Street(1882), 전화 벨 전화회사(1877), 자동차 첫 상업 판매(1896), 제약은 항생제 상용화(1940)를 현대 제약의 시작으로 봄, 무선 첫 상용 셀룰러(1983), 인터넷 상업화(1995), 클라우드 AWS(2006), 스마트폰 아이폰(2007), AI는 ChatGPT(2022.11).</p>
+    </div>
+
+    <h3 style="margin:28px 0 8px;font-size:16px">지표 비교표 — 도달 속도, 성장기 증가율, 꺾임 시점</h3>
+    <p class="sub" style="margin-bottom:10px">‘꺾임’은 $100B(또는 $10B) 도달 이후 처음으로 <b>10년 실질 CAGR이 3% 아래</b>로 내려간 해로 정의했습니다(기계적 규칙, 해석은 아래 참고).</p>
+    <div class="tbl-wrap"><table class="mile" id="t-mile"></table></div>
+    <div class="tbl-foot"><a class="btn" href="exports/industries_annual.csv" download>산업 시계열 CSV</a></div>
+    <div class="insight" id="ind-insight"></div>
+  </section>
+
+  <!-- ===== 5. Method ===== -->
+  <section id="method">
+    <h2><span class="idx">06</span>방법론, 정의, 한계</h2>
+    <div class="prose cols">
+      <div>
+        <h3>ARR(연환산 매출)이란</h3>
+        <p>보통 <b>최근 한 달 매출 × 12</b>(또는 최근 분기 × 4)입니다. 빠르게 크는 회사의 ‘현재 속도’를 보여주지만, 1년 동안 실제로 인식한 매출(GAAP)보다 항상 큽니다. 예: Anthropic 2025년 말 ARR $9B vs 2025년 인식 매출 약 $4.5~10B(출처별 상이), OpenAI 2025년 말 ARR $21.4B vs 인식 매출 약 $13B.</p>
+        <h3>누가 합산에 들어가나</h3>
+        <ul>
+          <li><b>모델 랩 합산(기본)</b>: OpenAI, Anthropic, xAI(Grok), Mistral, Cohere, DeepSeek, Moonshot, Z.ai(Zhipu). 공시·보도 수치만.</li>
+          <li><b>Google(Gemini)</b>: 비공시 → 자체 추정. ‘Google 추정 포함’ 합산에만 반영.</li>
+          <li><b>Microsoft AI</b>: Azure AI 소비+Copilot 합산 런레이트(회사 공시). 모델 랩이 아닌 플랫폼·재판매 성격이라 합산 제외, 참고선.</li>
+          <li><b>Meta</b>: 직접 모델 매출 없음(무료 Meta AI, 오픈웨이트 Llama). 2026년 6월부터 유료 구독 테스트 중. 수치 생기면 추가.</li>
+        </ul>
+        <h3>Google 추정 방식</h3>
+        <p>Alphabet 실적 발표의 공개 지표만 사용: <code>직접 API 토큰/분 × 52.56만 분 × 혼합단가 $0.40/M토큰</code> + 소비자 Gemini 구독(2025년 $1.2B 기반 외삽) + Gemini Enterprise 유료 시트 × 실현단가. 혼합단가는 Flash 비중이 높은 점을 반영한 가정이며, 범위(0.6~1.7배)를 월별 표 툴팁에 표시합니다. 오차가 크므로 추세 감각용입니다.</p>
+      </div>
+      <div>
+        <h3>월별 보간 규칙</h3>
+        <ul>
+          <li>같은 달에 복수 보도가 있으면 가장 늦은 날짜 값을 사용.</li>
+          <li>보고 시점 사이는 <b>로그 선형 보간</b>(일정 월 성장률 가정).</li>
+          <li>마지막 보고 이후는 최대 12개월간 최근값 유지(점선, ‘최근값 유지’ 표시). 그 이후는 공란.</li>
+          <li>xAI 2025년 분기 매출은 ×4로 연환산, Z.ai 반기 매출은 ×2로 연환산해 기간 중간에 배치(Epoch AI 방식).</li>
+        </ul>
+        <h3>산업 시계열의 한계</h3>
+        <ul>
+          <li>매출 성격이 다릅니다. 전자상거래·스마트폰·자동차는 <b>상품 거래액</b>(저마진), AI ARR·클라우드·통신은 <b>서비스 매출</b>(고마진). 빠른 도달이 곧 같은 이익을 뜻하지 않습니다.</li>
+          <li>철도·전력·전화·자동차는 미국 기준, 클라우드·스마트폰은 글로벌 기준입니다. GDP 대비 %는 미국 GDP로 나눈 값이라 글로벌 시계열은 과대 표시됩니다.</li>
+          <li>1950년 이전 수치는 Historical Statistics of the US 등의 근사값(±20~30%)입니다. 물가 환산은 CPI-U(1913년 이전은 Officer-Williamson 추정치).</li>
+          <li>AI 합산에도 빠진 회사가 많습니다(Perplexity·Cursor 같은 응용 기업, Midjourney, 중국 대형 클라우드의 모델 매출 등). 따라서 ‘AI 산업 전체’가 아니라 ‘프론티어 모델 랩의 직접 매출’입니다.</li>
+        </ul>
+        <h3>주요 출처</h3>
+        <p>Epoch AI <a href="https://epoch.ai/data/ai_companies_revenue_reports.csv" target="_blank" rel="noopener">AI companies revenue reports</a>(CC-BY) 데이터셋을 골격으로 삼고, Bloomberg·CNBC·Reuters·FT·The Information·회사 공시를 개별 확인했습니다. 산업 데이터: Historical Statistics of the United States, EIA, AT&amp;T 연차보고서, CMS NHE, CTIA, IAB/PwC, US Census, Synergy Research, IDC/Counterpoint, MeasuringWorth(CPI·GDP).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 6. Update ===== -->
+  <section id="update">
+    <h2><span class="idx">07</span>업데이트 주기와 변경 이력</h2>
+    <div class="prose">
+      <p><b>매월 1일</b> 갱신합니다. 절차: ① Epoch AI 데이터셋에서 새 보고 수집 → ② Bloomberg·CNBC·Reuters·The Information·회사 공시 검색으로 보완 → ③ 분기 실적 시즌(1·4·7·10월 말)에는 Google 추정 입력값(토큰/분, 시트 수)과 Microsoft AI 런레이트 갱신 → ④ 새 데이터 포인트는 출처 링크와 함께 <a href="#table">출처 로그</a>에 추가. 자동 수집된 값은 ‘검토 필요’ 표시 후 다음 갱신 때 확정합니다.</p>
+      <h3>변경 이력</h3>
+      <ul id="changelog"></ul>
+    </div>
+  </section>
+
+  <footer>
+    <p id="foot-meta"></p>
+    <p>이 페이지는 정보 제공 목적이며 투자 조언이 아닙니다. 모든 ARR 수치는 회사 공시 또는 언론 보도(익명 소식통 포함)를 인용한 것으로 감사된 재무제표가 아닙니다. 오류 제보·출처 추가는 환영합니다.</p>
+  </footer>
+</main>
+
+<script id="site-data" type="application/json">__DATA_JSON__</script>
+<script>
+(function(){
+'use strict';
+const D = JSON.parse(document.getElementById('site-data').textContent);
+const $ = (s, r=document) => r.querySelector(s);
+const isMobile = () => window.innerWidth < 640;
+const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------------- formatting ---------------- */
+function fmtUSD(v, digits){ // v in USD
+  if (v == null || !isFinite(v)) return '—';
+  const a = Math.abs(v);
+  const f = (x, d) => x.toFixed(d).replace(/\.0+$/, '').replace(/(\.\d*?)0+$/, '$1');
+  if (a >= 1e12) return '$' + f(v/1e12, digits ?? (a >= 1e13 ? 0 : 1)) + 'T';
+  if (a >= 1e9)  return '$' + f(v/1e9, digits ?? (a >= 1e11 ? 0 : 1)) + 'B';
+  if (a >= 1e6)  return '$' + f(v/1e6, digits ?? 0) + 'M';
+  if (a >= 1e3)  return '$' + f(v/1e3, digits ?? 0) + 'K';
+  return '$' + f(v, 2);
+}
+function fmtB(vB, digits){ return fmtUSD(vB * 1e9, digits); }
+function fmtPct(v){
+  if (v == null || !isFinite(v)) return '—';
+  const a = Math.abs(v);
+  if (a >= 10) return v.toFixed(0) + '%';
+  if (a >= 1) return v.toFixed(1) + '%';
+  if (a >= 0.1) return v.toFixed(2) + '%';
+  return v.toFixed(3) + '%';
+}
+function fmtSigned(v, d=0){ if (v == null) return '—'; return (v > 0 ? '+' : '') + v.toFixed(d) + '%'; }
+function ymKo(ym){ const [y,m] = ym.split('-'); return `${y}년 ${parseInt(m,10)}월`; }
+function decToYm(x){ const y = Math.floor(x); const m = Math.min(12, Math.max(1, Math.floor((x - y) * 12) + 1)); return `${y}-${String(m).padStart(2,'0')}`; }
+function yrFmt(y){ return Number.isInteger(y) ? String(y) : (Math.round(y*10)/10).toString(); }
+function esc(s){ return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* ---------------- chart renderer ---------------- */
+class LineChart {
+  constructor(el, cfg){
+    this.el = el; this.cfg = Object.assign({xMode:'time', yMode:'log', endLabels:true, markers:'status', mobileLabelLimit:5, guide:true}, cfg);
+    this.hidden = new Set(cfg.hiddenInit || []);
+    this.tip = document.createElement('div'); this.tip.className = 'tip'; el.appendChild(this.tip);
+    this.svg = null; this.first = true;
+    this.ro = new ResizeObserver(() => this.render());
+    this.ro.observe(el);
+    if (cfg.legendEl) this.renderLegend();
+  }
+  set(cfg){ Object.assign(this.cfg, cfg); this.render(); if (this.cfg.legendEl) this.renderLegend(); }
+  visible(){ return this.cfg.series.filter(s => !this.hidden.has(s.id)); }
+  yScaleFn(){
+    const {yMode} = this.cfg, {yMin, yMax, pT, pH} = this.dims;
+    if (yMode === 'log') { const a = Math.log10(yMin), b = Math.log10(yMax); return v => pT + pH - (Math.log10(v) - a) / (b - a) * pH; }
+    return v => pT + pH - (v - yMin) / (yMax - yMin) * pH;
+  }
+  render(){
+    const el = this.el, cfg = this.cfg, W = el.clientWidth; if (!W) return;
+    const mob = isMobile();
+    const vis = this.visible();
+    let allPts = vis.flatMap(s => s.pts.filter(p => p[1] != null && p[1] > 0));
+    if (cfg.xDomain) allPts = allPts.filter(p => (cfg.xDomain[0] == null || p[0] >= cfg.xDomain[0]) && (cfg.xDomain[1] == null || p[0] <= cfg.xDomain[1]));
+    if (!allPts.length) { el.innerHTML = ''; el.appendChild(this.tip); return; }
+    const H = cfg.height ? cfg.height(W, mob) : Math.round(Math.max(260, Math.min(520, W * (mob ? 0.92 : 0.56))));
+    const fs = mob ? 10.5 : 12;
+    // domains
+    let xMin = Math.min(...allPts.map(p => p[0])), xMax = Math.max(...allPts.map(p => p[0]));
+    if (cfg.xDomain) { xMin = cfg.xDomain[0] ?? xMin; xMax = cfg.xDomain[1] ?? xMax; }
+    const xPad = cfg.xDomain ? 0 : (xMax - xMin) * 0.02; xMin -= xPad; xMax += xPad;
+    const ys = allPts.map(p => p[1]);
+    let yMin, yMax;
+    if (cfg.yMode === 'log') { const lo = Math.min(...ys), hi = Math.max(...ys); yMin = Math.pow(10, Math.floor(Math.log10(lo))); yMax = hi * 1.5; if (cfg.yFloor) yMin = Math.max(yMin, cfg.yFloor); }
+    else { yMin = 0; yMax = Math.max(...ys) * 1.08; }
+    // labels width
+    const labelSeries = ((mob && cfg.mobileLabels === 'bold') ? vis.filter(s => s.bold) : vis).filter(s => !s.noEndLabel);
+    const labelTexts = cfg.endLabels ? labelSeries.map(s => this.lastLabel(s)).filter(Boolean) : [];
+    const charW = fs * 0.56;
+    const maxLab = labelTexts.length ? Math.max(...labelTexts.map(t => t.length)) : 0;
+    const pL = mob ? 44 : 58, pR = (cfg.endLabels && labelTexts.length ? Math.min(mob ? 96 : 190, maxLab * charW + 12) : 12), pT = 14, pB = mob ? 34 : 38;
+    const pW = W - pL - pR, pH = H - pT - pB;
+    this.dims = {W, H, pL, pR, pT, pB, pW, pH, xMin, xMax, yMin, yMax, fs, mob};
+    const xs = v => pL + (v - xMin) / (xMax - xMin) * pW;
+    const ysc = this.yScaleFn();
+    this.xs = xs; this.ysc = ysc;
+    let g = '';
+    // ---- y grid
+    const yFmt = cfg.yFmt || (v => fmtUSD(v));
+    if (cfg.yMode === 'log') {
+      const lo = Math.floor(Math.log10(yMin)), hi = Math.ceil(Math.log10(yMax));
+      for (let e = lo; e <= hi; e++) {
+        const base = Math.pow(10, e);
+        if (base >= yMin && base <= yMax) {
+          const y = ysc(base);
+          g += `<line x1="${pL}" x2="${pL+pW}" y1="${y}" y2="${y}" stroke="var(--grid)" stroke-width="1"/>`;
+          g += `<text x="${pL-8}" y="${y+fs*0.35}" text-anchor="end" font-size="${fs}" fill="var(--ink-3)" font-family="var(--mono)">${yFmt(base)}</text>`;
+        }
+        for (let k = 2; k < 10; k++) { const v = base * k; if (v > yMin && v < yMax) { const y = ysc(v); g += `<line x1="${pL}" x2="${pL+pW}" y1="${y}" y2="${y}" stroke="var(--grid-2)" stroke-width="1"/>`; } }
+      }
+    } else {
+      const step = niceStep(yMax / 5);
+      for (let v = 0; v <= yMax; v += step) { const y = ysc(v); g += `<line x1="${pL}" x2="${pL+pW}" y1="${y}" y2="${y}" stroke="var(--grid)" stroke-width="1"/><text x="${pL-8}" y="${y+fs*0.35}" text-anchor="end" font-size="${fs}" fill="var(--ink-3)" font-family="var(--mono)">${yFmt(v)}</text>`; }
+    }
+    // ---- x ticks
+    const ticks = cfg.xTicks ? cfg.xTicks(xMin, xMax, mob) : autoTicks(xMin, xMax, mob ? 5 : 9);
+    const xFmt = cfg.xFmt || (v => yrFmt(v));
+    for (const t of ticks) { const x = xs(t); g += `<line x1="${x}" x2="${x}" y1="${pT}" y2="${pT+pH}" stroke="var(--grid-2)" stroke-width="1"/><text x="${x}" y="${pT+pH+fs+8}" text-anchor="middle" font-size="${fs}" fill="var(--ink-3)" font-family="var(--mono)">${xFmt(t)}</text>`; }
+    if (cfg.xLabel) g += `<text x="${pL+pW/2}" y="${H-2}" text-anchor="middle" font-size="${fs-0.5}" fill="var(--ink-4)">${esc(cfg.xLabel)}</text>`;
+    g += `<line x1="${pL}" x2="${pL+pW}" y1="${pT+pH}" y2="${pT+pH}" stroke="var(--line)" stroke-width="1"/>`;
+    // ---- annotations
+    for (const a of (cfg.annotations || [])) { if (a.y < yMin || a.y > yMax) continue; const y = ysc(a.y); g += `<line x1="${pL}" x2="${pL+pW}" y1="${y}" y2="${y}" stroke="var(--ink-4)" stroke-dasharray="3 4" stroke-width="1"/><text x="${pL+6}" y="${y-4}" font-size="${fs-1}" fill="var(--ink-3)">${esc(a.text)}</text>`; }
+    // ---- series
+    let paths = '', marks = '';
+    for (const s of vis) {
+      const sw = s.width || (mob ? 1.6 : 2);
+      const solid = [], dashed = [];
+      let cur = [], curDash = null;
+      const pts = s.pts;
+      for (let i = 0; i < pts.length; i++) {
+        const p = pts[i];
+        if (p[1] == null || p[1] <= 0) { if (cur.length > 1) (curDash ? dashed : solid).push(cur); cur = []; curDash = null; continue; }
+        const dash = !!(s.dash || p[2] === 'carry' || (i > 0 && pts[i-1][2] === 'carry' && false));
+        if (curDash === null) curDash = dash;
+        if (dash !== curDash) { // close segment, start new starting from previous point
+          const last = cur[cur.length-1]; (curDash ? dashed : solid).push(cur); cur = last ? [last] : []; curDash = dash;
+        }
+        cur.push(p);
+      }
+      if (cur.length > 1) (curDash ? dashed : solid).push(cur);
+      const d = segs => segs.map(seg => seg.map((p, i) => `${i ? 'L' : 'M'}${xs(p[0]).toFixed(1)},${ysc(p[1]).toFixed(1)}`).join('')).join('');
+      if (solid.length) paths += `<path class="line" d="${d(solid)}" fill="none" stroke="${s.color}" stroke-width="${sw}" stroke-linejoin="round" stroke-linecap="round" opacity="${s.opacity ?? 1}"/>`;
+      if (dashed.length) paths += `<path class="line" d="${d(dashed)}" fill="none" stroke="${s.color}" stroke-width="${sw}" stroke-dasharray="${s.dash ? '5 4' : '2 4'}" stroke-linejoin="round" stroke-linecap="round" opacity="${s.opacity ?? 1}"/>`;
+      if (cfg.markers !== 'none') {
+        for (const p of pts) {
+          if (p[1] == null || p[1] <= 0) continue;
+          const r = mob ? 2.6 : 3.2;
+          if (cfg.markers === 'status') {
+            if (p[2] === 'reported') marks += `<circle cx="${xs(p[0]).toFixed(1)}" cy="${ysc(p[1]).toFixed(1)}" r="${r}" fill="${s.color}"/>`;
+            else if (p[2] === 'estimate') marks += `<circle cx="${xs(p[0]).toFixed(1)}" cy="${ysc(p[1]).toFixed(1)}" r="${r}" fill="var(--surface)" stroke="${s.color}" stroke-width="1.6"/>`;
+          } else if (cfg.markers === 'all') marks += `<circle cx="${xs(p[0]).toFixed(1)}" cy="${ysc(p[1]).toFixed(1)}" r="${r-0.8}" fill="${s.color}"/>`;
+        }
+      }
+    }
+    // ---- end labels
+    let labels = '';
+    if (cfg.endLabels) {
+      let items = labelSeries.map(s => { const last = [...s.pts].reverse().find(p => p[1] != null && p[1] > 0 && (!cfg.xDomain || p[0] <= (cfg.xDomain[1] ?? Infinity))); return last ? {s, last, text: this.lastLabel(s, last), y: ysc(last[1])} : null; }).filter(Boolean);
+      if (mob && items.length > cfg.mobileLabelLimit) { items.sort((a,b) => b.last[1] - a.last[1]); items = items.slice(0, cfg.mobileLabelLimit); }
+      const lh = fs * 1.25;
+      items.sort((a,b) => a.y - b.y);
+      let ly = items.map(it => it.y);
+      for (let i = 1; i < ly.length; i++) if (ly[i] < ly[i-1] + lh) ly[i] = ly[i-1] + lh;
+      const bottom = pT + pH + 2; for (let i = ly.length - 1; i >= 0; i--) { if (ly[i] > bottom) ly[i] = bottom; if (i < ly.length - 1 && ly[i] > ly[i+1] - lh) ly[i] = ly[i+1] - lh; }
+      items.forEach((it, i) => {
+        const x0 = pL + pW, x1 = x0 + 6;
+        if (Math.abs(ly[i] - it.y) > 1.5) labels += `<line x1="${x0}" x2="${x1+2}" y1="${it.y}" y2="${ly[i]}" stroke="${it.s.color}" stroke-width="1" opacity=".6"/>`;
+        labels += `<text x="${x1+4}" y="${ly[i]+fs*0.35}" font-size="${fs}" font-weight="${it.s.bold ? 700 : 600}" fill="${it.s.color}" font-family="var(--display)" letter-spacing=".01em">${esc(it.text)}</text>`;
+      });
+    }
+    let callouts = '';
+    for (const c of (cfg.callouts || [])) {
+      if (c.x < xMin || c.x > xMax || c.y < yMin || c.y > yMax) continue;
+      const cx = xs(c.x), cy = ysc(c.y), dx = (c.dx ?? 14) * (mob ? .7 : 1), dy = c.dy ?? -18;
+      const tx = cx + dx, ty = cy + dy, anchor = dx < 0 ? 'end' : 'start';
+      callouts += `<line x1="${cx}" y1="${cy}" x2="${tx - (dx < 0 ? -4 : 4)}" y2="${ty + 4}" stroke="${c.color || 'var(--ink-2)'}" stroke-width="1"/><circle cx="${cx}" cy="${cy}" r="${mob ? 3.2 : 4}" fill="${c.color || 'var(--ink)'}" stroke="var(--surface)" stroke-width="1.5"/>`;
+      (c.text || '').split('\n').forEach((line, i) => { callouts += `<text x="${tx}" y="${ty + i * (fs + 2)}" text-anchor="${anchor}" font-size="${fs}" font-weight="${i === 0 ? 700 : 500}" fill="${c.color || 'var(--ink)'}" font-family="var(--display)" paint-order="stroke" stroke="var(--surface)" stroke-width="3">${esc(line)}</text>`; });
+    }
+    const anim = (this.first && !reduced && cfg.animate) ? ' class="draw"' : '';
+    const cid = 'clip' + Math.random().toString(36).slice(2, 8);
+    el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc(cfg.aria || '')}"${anim}><defs><clipPath id="${cid}"><rect x="${pL-1}" y="${pT-6}" width="${pW+2}" height="${pH+7}"/></clipPath></defs><g>${g}</g><g clip-path="url(#${cid})">${paths}</g><g clip-path="url(#${cid})">${marks}</g><g>${labels}</g><g>${callouts}</g><line class="guide" x1="0" x2="0" y1="${pT}" y2="${pT+pH}" stroke="var(--ink-3)" stroke-width="1" opacity="0"/><rect class="hit" x="${pL}" y="${pT}" width="${pW}" height="${pH}" fill="transparent"/></svg>`;
+    el.appendChild(this.tip);
+    if (anim) { el.querySelectorAll('path.line').forEach(p => { const L = p.getTotalLength(); p.style.setProperty('--len', L); }); }
+    this.first = false;
+    this.bindHover();
+  }
+  lastLabel(s, last){ last = last || [...s.pts].reverse().find(p => p[1] != null && p[1] > 0 && (!this.cfg.xDomain || p[0] <= (this.cfg.xDomain[1] ?? Infinity))); if (!last) return null; const f = this.cfg.labelFmt || this.cfg.yFmt || (v => fmtUSD(v)); return `${s.short || s.name} ${f(last[1])}`; }
+  bindHover(){
+    const svg = this.el.querySelector('svg'), hit = svg.querySelector('.hit'), guide = svg.querySelector('.guide');
+    const move = (clientX, clientY) => {
+      const r = svg.getBoundingClientRect(); const x = clientX - r.left; const scale = this.dims.W / r.width; const xv = this.dims.xMin + (x * scale - this.dims.pL) / this.dims.pW * (this.dims.xMax - this.dims.xMin);
+      const rows = [];
+      for (const s of this.visible()) {
+        const v = valueAt(s.pts, xv, this.cfg.snap);
+        if (v != null) rows.push({s, v});
+      }
+      if (!rows.length) { this.tip.style.opacity = 0; guide.setAttribute('opacity', 0); return; }
+      rows.sort((a, b) => b.v - a.v);
+      const xSnap = this.cfg.snap ? snapX(rows[0].s.pts, xv) : xv;
+      const f = this.cfg.yFmt || (v => fmtUSD(v));
+      let html = `<div class="h">${esc(this.cfg.xTip ? this.cfg.xTip(xSnap) : yrFmt(xSnap))}</div>`;
+      for (const row of rows.slice(0, 12)) html += `<div class="r"><span><i style="background:${row.s.color}"></i>${esc(row.s.short || row.s.name)}</span><span class="v">${f(row.v)}</span></div>`;
+      if (this.cfg.tipExtra) html += this.cfg.tipExtra(xSnap, rows);
+      this.tip.innerHTML = html;
+      const gx = this.xs(xSnap); guide.setAttribute('x1', gx); guide.setAttribute('x2', gx); guide.setAttribute('opacity', .5);
+      this.tip.style.opacity = 1;
+      const tw = this.tip.offsetWidth, elW = this.el.clientWidth;
+      let left = gx / scale + 14; if (left + tw > elW - 4) left = gx / scale - tw - 14; if (left < 0) left = 4;
+      this.tip.style.left = left + 'px';
+      const ty = clientY - r.top; this.tip.style.top = Math.max(4, Math.min(ty - 30, this.el.clientHeight - this.tip.offsetHeight - 4)) + 'px';
+    };
+    hit.addEventListener('mousemove', e => move(e.clientX, e.clientY));
+    hit.addEventListener('mouseleave', () => { this.tip.style.opacity = 0; guide.setAttribute('opacity', 0); });
+    hit.addEventListener('touchstart', e => { const t = e.touches[0]; move(t.clientX, t.clientY); }, {passive:true});
+    hit.addEventListener('touchmove', e => { const t = e.touches[0]; move(t.clientX, t.clientY); }, {passive:true});
+    hit.addEventListener('touchend', () => setTimeout(() => { this.tip.style.opacity = 0; guide.setAttribute('opacity', 0); }, 1800), {passive:true});
+  }
+  renderLegend(){
+    const L = this.cfg.legendEl; if (!L) return;
+    let h = '';
+    for (const s of this.cfg.series) h += `<button type="button" data-id="${esc(s.id)}" class="${this.hidden.has(s.id) ? 'off' : ''}" aria-pressed="${!this.hidden.has(s.id)}"><i style="background:${s.color}"></i>${esc(s.name)}</button>`;
+    h += `<span class="sep"></span><button type="button" class="all" data-all="1">모두 보기</button>`;
+    L.innerHTML = h;
+    L.querySelectorAll('button[data-id]').forEach(b => b.addEventListener('click', () => { const id = b.dataset.id; if (this.hidden.has(id)) this.hidden.delete(id); else this.hidden.add(id); this.render(); this.renderLegend(); }));
+    L.querySelector('[data-all]').addEventListener('click', () => { this.hidden.clear(); this.render(); this.renderLegend(); });
+  }
+}
+function niceStep(raw){ const e = Math.pow(10, Math.floor(Math.log10(raw))); const m = raw / e; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * e; }
+function autoTicks(min, max, n){ const step = niceStep((max - min) / n); const out = []; for (let v = Math.ceil(min / step) * step; v <= max; v += step) out.push(Math.round(v * 1e6) / 1e6); return out; }
+function valueAt(pts, x, snap){
+  const valid = pts.filter(p => p[1] != null && p[1] > 0);
+  if (!valid.length) return null;
+  if (x < valid[0][0] - 0.04 || x > valid[valid.length-1][0] + 0.04) return null;
+  if (snap) { let best = valid[0]; for (const p of valid) if (Math.abs(p[0] - x) < Math.abs(best[0] - x)) best = p; return Math.abs(best[0] - x) <= snap ? best[1] : null; }
+  for (let i = 0; i < valid.length - 1; i++) { const a = valid[i], b = valid[i+1]; if (x >= a[0] && x <= b[0]) { const t = (x - a[0]) / (b[0] - a[0] || 1); return Math.exp(Math.log(a[1]) + t * (Math.log(b[1]) - Math.log(a[1]))); } }
+  return valid[valid.length-1][1];
+}
+function snapX(pts, x){ let best = pts[0]; for (const p of pts) if (p[1] != null && Math.abs(p[0] - x) < Math.abs(best[0] - x)) best = p; return best[0]; }
+function seg(el, onChange){ el.querySelectorAll('button').forEach(b => b.addEventListener('click', () => { el.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', 'false')); b.setAttribute('aria-pressed', 'true'); onChange(b.dataset.v); })); }
+function segVal(el){ return el.querySelector('[aria-pressed="true"]').dataset.v; }
+
+/* ---------------- data prep ---------------- */
+const months = D.months, N = months.length, K = D.kpis, latest = N - 1;
+const mdec = months.map(ym => { const [y, m] = ym.split('-').map(Number); return y + (m - 0.5) / 12; });
+const comp = D.companies, byId = Object.fromEntries(comp.map(c => [c.id, c]));
+const labs = comp.filter(c => c.in_total);
+const short = {openai:'OpenAI', anthropic:'Anthropic', google:'Google(추정)', xai:'xAI', mistral:'Mistral', cohere:'Cohere', deepseek:'DeepSeek', moonshot:'Moonshot', zhipu:'Z.ai', microsoft:'MS AI(참고)', meta:'Meta'};
+
+/* ---------------- header / KPIs ---------------- */
+$('#h-total').textContent = fmtUSD(K.total);
+$('#meta-chips').innerHTML = `<span>마지막 업데이트 <b class="num">${D.meta.last_updated}</b></span><span>데이터 기준 <b class="num">${ymKo(D.meta.data_through)}</b></span><span>다음 업데이트 <b class="num">${D.meta.next_update}</b> (매월 1일)</span><span>추적 기업 <b>${comp.filter(c => c.points.length).length}</b>개 · 데이터 포인트 <b>${D.sources.length}</b>개</span>`;
+$('#foot-meta').textContent = `빌드 ${D.built_at} · 버전 ${D.meta.version} · 데이터 기준 ${D.meta.data_through}`;
+(function kpis(){
+  const dbl = K.doubling_months;
+  const cards = [
+    {l:`모델 랩 합산 ARR (${ymKo(K.month)})`, v: fmtUSD(K.total), d:`Google 추정 포함 시 <b>${fmtUSD(K.total_est)}</b>`},
+    {l:'전년 동월 대비', v: fmtSigned(K.yoy, 0), d:`전분기 대비 <b>${fmtSigned(K.qoq, 0)}</b> · 2년 전 대비 <b>${K.yoy2 != null ? (K.yoy2/100+1).toFixed(0)+'배' : '—'}</b>`},
+    {l:'최근 6개월 기준 2배 소요', v: dbl ? dbl.toFixed(1) + '<small>개월</small>' : '—', d:`전월 대비 <b>${fmtSigned(K.mom, 1)}</b>`},
+    {l:'상위 2개사 비중 (Anthropic+OpenAI)', v: K.share_top2 != null ? K.share_top2.toFixed(0) + '<small>%</small>' : '—', d: K.top.map(t => `${esc(t[0])} <b>${fmtUSD(t[1])}</b>`).join(' · ')},
+  ];
+  $('#kpis').innerHTML = cards.map(c => `<div class="card kpi"><div class="l">${c.l}</div><div class="v">${c.v}</div><div class="d">${c.d}</div></div>`).join('');
+})();
+
+/* ---------------- company chart ---------------- */
+const compChart = new LineChart($('#c-comp'), {
+  series: [], yMode: 'log', xMode: 'time', animate: true, aria: '기업별 ARR 추이',
+  xTicks: (a, b, mob) => { const out = []; for (let y = Math.ceil(a); y <= Math.floor(b); y++) out.push(y); return out; },
+  xFmt: v => String(v), snap: 1/24 + 0.001, xTip: x => ymKo(decToYm(x + 0.0001)),
+  legendEl: $('#l-comp'), hiddenInit: [],
+  tipExtra: (x, rows) => { const m = months.indexOf(decToYm(x + 0.0001)); if (m < 0 || D.totals[m] == null) return ''; const g = byId.google.values[m]; return `<div class="r tot"><span>모델 랩 합산</span><span class="v">${fmtUSD(D.totals[m])}</span></div>` + (g ? `<div class="r"><span>+ Google 추정</span><span class="v">${fmtUSD(D.totals_est[m])}</span></div>` : ''); },
+});
+function compSeries(group){
+  return comp.filter(c => c.points.length && (group === 'all' || c.group === 'lab')).map(c => ({
+    id: c.id, name: c.name, short: short[c.id] || c.name, color: c.color, dash: c.est || c.id === 'microsoft',
+    opacity: c.id === 'microsoft' ? .8 : 1, width: (c.id === 'anthropic' || c.id === 'openai') ? 2.4 : undefined,
+    pts: c.values.map((v, i) => [mdec[i], v, c.status[i]]),
+  }));
+}
+function updComp(){ compChart.set({series: compSeries(segVal($('#comp-group'))), yMode: segVal($('#comp-y'))}); }
+seg($('#comp-y'), updComp); seg($('#comp-group'), updComp); updComp();
+$('#c-comp-sub').textContent = `${ymKo(months[0])} ~ ${ymKo(months[latest])} · 월별 · USD`;
+
+// company cards
+$('#cos').innerHTML = comp.map(c => {
+  const v = c.values[latest], st = c.status[latest];
+  const lp = c.last_point;
+  const stTxt = !lp ? '데이터 없음' : `${fmtUSD(v)} <span style="color:var(--ink-4)">(${st === 'reported' ? '보고' : st === 'estimate' ? '추정' : st === 'carry' ? '최근값 유지' : '보간'} · 최근 보고 ${lp.date})</span>`;
+  return `<div class="card co"><b><i style="background:${c.color}"></i><span class="nm">${esc(c.name)}</span><span class="st">${stTxt}</span></b>${esc(c.note_ko)}</div>`;
+}).join('');
+
+/* ---------------- total chart ---------------- */
+const totChart = new LineChart($('#c-total'), {
+  series: [], yMode: 'log', aria: '합산 ARR 추이', markers: 'none',
+  xTicks: (a, b) => { const out = []; for (let y = Math.ceil(a); y <= Math.floor(b); y++) out.push(y); return out; }, xFmt: v => String(v),
+  snap: 1/24 + 0.001, xTip: x => ymKo(decToYm(x + 0.0001)),
+  tipExtra: (x) => { const m = months.indexOf(decToYm(x + 0.0001)); if (m < 1 || D.totals[m] == null || D.totals[m-1] == null) return ''; const mom = (D.totals[m] / D.totals[m-1] - 1) * 100; const yoy = m >= 12 && D.totals[m-12] ? (D.totals[m] / D.totals[m-12] - 1) * 100 : null; return `<div class="r tot"><span>전월 대비</span><span class="v">${fmtSigned(mom,1)}</span></div>${yoy != null ? `<div class="r"><span>전년 대비</span><span class="v">${fmtSigned(yoy,0)}</span></div>` : ''}<div class="r"><span>포함 기업 수</span><span class="v">${D.coverage[m]}</span></div>`; },
+});
+function totCallouts(){ const out = []; const nomAt = x => { const m = months.indexOf(decToYm(x + 0.0001)); return m >= 0 ? D.totals[m] : null; };
+  for (const [key, label] of [['cross1','$1B'],['cross10','$10B'],['cross100','$100B']]) { const x = D.ai[key]; if (!x) continue; const y = nomAt(x); if (!y) continue; out.push({x, y, color:'#0F1B2D', dx: key === 'cross100' ? -22 : -14, dy: key === 'cross100' ? -24 : -16, text: `${label} 돌파 ${ymKo(decToYm(x + 0.0001))}`}); }
+  return out; }
+function updTot(){ totChart.set({yMode: segVal($('#tot-y')), callouts: totCallouts(), series: [
+  {id:'tot', name:'모델 랩 합산', short:'합산', color:'#0F1B2D', width:2.6, bold:true, pts: D.totals.map((v, i) => [mdec[i], v, 'interp'])},
+  {id:'tote', name:'Google 추정 포함', short:'+Google 추정', color:'#6B7787', dash:true, pts: D.totals_est.map((v, i) => [mdec[i], v, 'interp'])},
+]}); }
+seg($('#tot-y'), updTot); updTot();
+(function(){ const c1 = D.ai.cross1, c10 = D.ai.cross10, c100 = D.ai.cross100; const f = x => x ? ymKo(decToYm(x + 0.0001)) : '—'; $('#tot-note').innerHTML = `실질(2024$) 기준 합산 ARR 도달 시점: $1B <b>${f(c1)}</b> → $10B <b>${f(c10)}</b> → $100B <b>${f(c100)}</b>${D.ai.years_10_100 ? ` ($10B→$100B <b>${D.ai.years_10_100.toFixed(1)}년</b>)` : ''}. 명목 합산 ${fmtUSD(K.total)}, 추정 포함 ${fmtUSD(K.total_est)}.`; })();
+
+/* ---------------- share (stacked area) ---------------- */
+(function share(){
+  const el = $('#c-share'), legend = $('#l-share');
+  const groups = [
+    {id:'anthropic', name:'Anthropic', color: byId.anthropic.color, ids:['anthropic']},
+    {id:'openai', name:'OpenAI', color: byId.openai.color, ids:['openai']},
+    {id:'other', name:'기타 모델 랩 (xAI·Mistral·Cohere·DeepSeek·Moonshot·Z.ai)', color:'#B8C0CC', ids: labs.filter(c => !['anthropic','openai'].includes(c.id)).map(c => c.id)},
+  ];
+  const tip = document.createElement('div'); tip.className = 'tip';
+  function render(){
+    const W = el.clientWidth; if (!W) return; const mob = isMobile(); const H = Math.round(Math.max(200, Math.min(300, W * (mob ? .6 : .3)))); const fs = mob ? 10.5 : 12;
+    const pL = mob ? 38 : 48, pR = 14, pT = 10, pB = mob ? 30 : 34, pW = W - pL - pR, pH = H - pT - pB;
+    const first = D.totals.findIndex(v => v != null);
+    const xs = i => pL + (i - first) / (latest - first) * pW, ys = v => pT + pH - v / 100 * pH;
+    const shares = []; // per month: array of cumulative
+    for (let m = first; m <= latest; m++) { const T = D.totals[m] || 1; let acc = 0; const row = []; for (const g of groups) { const v = g.ids.reduce((s, id) => s + (byId[id].values[m] || 0), 0) / T * 100; row.push([acc, acc + v]); acc += v; } shares.push(row); }
+    let areas = '';
+    groups.forEach((g, gi) => {
+      let top = '', bot = '';
+      shares.forEach((row, k) => { const m = first + k; top += `${top ? 'L' : 'M'}${xs(m).toFixed(1)},${ys(row[gi][1]).toFixed(1)}`; });
+      for (let k = shares.length - 1; k >= 0; k--) { const m = first + k; bot += `L${xs(m).toFixed(1)},${ys(shares[k][gi][0]).toFixed(1)}`; }
+      areas += `<path d="${top}${bot}Z" fill="${g.color}" opacity=".9"/>`;
+    });
+    let grid = '';
+    for (const v of [0, 25, 50, 75, 100]) grid += `<line x1="${pL}" x2="${pL+pW}" y1="${ys(v)}" y2="${ys(v)}" stroke="var(--grid)"/><text x="${pL-6}" y="${ys(v)+fs*.35}" text-anchor="end" font-size="${fs}" fill="var(--ink-3)" font-family="var(--mono)">${v}%</text>`;
+    let xt = '';
+    for (let m = first; m <= latest; m++) if (months[m].endsWith('-01')) xt += `<text x="${xs(m)}" y="${pT+pH+fs+8}" text-anchor="middle" font-size="${fs}" fill="var(--ink-3)" font-family="var(--mono)">${months[m].slice(0,4)}</text>`;
+    el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="합산 내 점유율"><g>${grid}</g><g>${areas}</g><g>${xt}</g><line class="guide" x1="0" x2="0" y1="${pT}" y2="${pT+pH}" stroke="var(--ink)" opacity="0"/><rect class="hit" x="${pL}" y="${pT}" width="${pW}" height="${pH}" fill="transparent"/></svg>`;
+    el.appendChild(tip);
+    const svg = el.querySelector('svg'), hit = svg.querySelector('.hit'), guide = svg.querySelector('.guide');
+    const move = (cx, cy) => { const r = svg.getBoundingClientRect(); const sc = W / r.width; const m = Math.round(first + ((cx - r.left) * sc - pL) / pW * (latest - first)); if (m < first || m > latest) return; const row = shares[m - first]; let html = `<div class="h">${ymKo(months[m])}</div>`; groups.forEach((g, gi) => html += `<div class="r"><span><i style="background:${g.color}"></i>${esc(g.name.split(' (')[0])}</span><span class="v">${(row[gi][1]-row[gi][0]).toFixed(0)}%</span></div>`); html += `<div class="r tot"><span>합산</span><span class="v">${fmtUSD(D.totals[m])}</span></div>`; tip.innerHTML = html; tip.style.opacity = 1; const gx = xs(m); guide.setAttribute('x1', gx); guide.setAttribute('x2', gx); guide.setAttribute('opacity', .6); let left = gx / sc + 14; if (left + tip.offsetWidth > el.clientWidth - 4) left = gx / sc - tip.offsetWidth - 14; tip.style.left = Math.max(4, left) + 'px'; tip.style.top = Math.max(4, Math.min(cy - r.top - 30, el.clientHeight - tip.offsetHeight - 4)) + 'px'; };
+    hit.addEventListener('mousemove', e => move(e.clientX, e.clientY)); hit.addEventListener('mouseleave', () => { tip.style.opacity = 0; guide.setAttribute('opacity', 0); });
+    hit.addEventListener('touchstart', e => move(e.touches[0].clientX, e.touches[0].clientY), {passive:true}); hit.addEventListener('touchmove', e => move(e.touches[0].clientX, e.touches[0].clientY), {passive:true});
+  }
+  legend.innerHTML = groups.map(g => `<button type="button" disabled style="cursor:default"><i style="background:${g.color}"></i>${esc(g.name)}</button>`).join('');
+  new ResizeObserver(render).observe(el); render();
+})();
+
+/* ---------------- monthly table ---------------- */
+(function monthTable(){
+  const cols = comp.filter(c => c.points.length);
+  let expanded = false;
+  function render(){
+    const rows = []; const from = expanded ? 0 : Math.max(0, N - 12);
+    let h = `<table><thead><tr><th>월</th><th>모델 랩 합산</th><th>+Google 추정</th>${cols.map(c => `<th>${esc(short[c.id] || c.name)}</th>`).join('')}<th>포함 수</th></tr></thead><tbody>`;
+    for (let m = latest; m >= from; m--) {
+      h += `<tr><td class="num">${months[m]}</td><td class="num tot">${D.totals[m] == null ? '—' : fmtUSD(D.totals[m])}</td><td class="num">${D.totals_est[m] == null ? '—' : fmtUSD(D.totals_est[m])}</td>`;
+      for (const c of cols) { const v = c.values[m], s = c.status[m]; const cls = s === 'reported' ? 'rep' : s === 'estimate' ? 'est' : s === 'carry' ? 'carry' : s === 'interp' ? 'interp' : 'na'; let title = ''; if (s === 'reported' || s === 'estimate') { const p = [...c.points].reverse().find(p => p.date.startsWith(months[m])); if (p) title = ` title="${esc(p.src_label)}${p.note ? ' — ' + esc(p.note) : ''}${p.range ? ' (범위 ' + fmtUSD(p.range[0]) + '~' + fmtUSD(p.range[1]) + ')' : ''}"`; } h += `<td class="num ${cls}"${title}>${v == null ? '—' : fmtUSD(v)}</td>`; }
+      h += `<td class="num">${D.coverage[m]}</td></tr>`;
+    }
+    h += '</tbody></table>'; $('#t-month').innerHTML = h;
+    $('#t-month-more').textContent = expanded ? '최근 12개월만 보기' : `전체 기간 보기 (${N}개월)`;
+  }
+  $('#t-month-more').addEventListener('click', () => { expanded = !expanded; render(); });
+  render();
+})();
+
+/* ---------------- sources table ---------------- */
+(function srcTable(){
+  let expanded = false;
+  const kindKo = {disclosure:'공시', media:'보도', estimate:'추정', derived:'파생'};
+  function render(){
+    const list = expanded ? D.sources : D.sources.slice(0, 15);
+    let h = `<table><thead><tr><th>날짜</th><th style="text-align:left">기업</th><th>연환산 매출</th><th style="text-align:left">구분</th><th style="text-align:left">출처</th><th style="text-align:left">비고</th></tr></thead><tbody>`;
+    for (const s of list) { let host = ''; try { host = new URL(s.src).hostname.replace('www.', ''); } catch(e){} h += `<tr><td class="num">${s.date}</td><td style="text-align:left"><i style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${byId[s.cid].color};margin-right:6px;vertical-align:0"></i>${esc(s.company)}</td><td class="num">${fmtUSD(s.value)}</td><td style="text-align:left"><span class="kind ${s.kind}">${kindKo[s.kind] || s.kind}</span>${s.review ? ' <span class="kind" style="background:#FDE8E8;color:#9B1C1C">검토 필요</span>' : ''}</td><td class="src" style="text-align:left">${s.src ? `<a href="${esc(s.src)}" target="_blank" rel="noopener">${esc(s.src_label || host)}</a>` : esc(s.src_label)}</td><td style="text-align:left;white-space:normal;min-width:220px;color:var(--ink-3);font-size:12px">${esc(s.note)}</td></tr>`; }
+    h += '</tbody></table>'; $('#t-src').innerHTML = h; $('#t-src-more').textContent = expanded ? '최근 15개만 보기' : `전체 보기 (${D.sources.length}개)`;
+  }
+  $('#t-src-more').addEventListener('click', () => { expanded = !expanded; render(); }); render();
+})();
+
+/* ---------------- industries ---------------- */
+const IND = D.industries, AI = D.ai;
+const unitFmt = {nominal: v => fmtB(v), real: v => fmtB(v), gdp: v => fmtPct(v)};
+function indSeries(unit, xmode){
+  const out = IND.map(ind => {
+    const src = unit === 'gdp' ? ind.gdp : unit === 'real' ? ind.real : ind.nominal;
+    const shift = xmode === 'abs' ? 0 : xmode === 'cross' ? ind.cross10 : ind.t0;
+    const pts = (shift == null) ? [] : src.map(([y, v]) => [y - shift, v, 'interp']);
+    const rawYears = new Set(ind.raw.map(p => p[0]));
+    return {id: ind.id, name: ind.name_ko, short: ind.name_ko, color: ind.color, width: 1.7, opacity: .95, pts, raw: rawYears};
+  }).filter(s => s.pts.length);
+  const aiSrc = unit === 'gdp' ? AI.monthly_gdp : unit === 'real' ? AI.monthly_real : AI.monthly_nominal;
+  const shift = xmode === 'abs' ? 0 : xmode === 'cross' ? AI.cross10 : AI.t0;
+  if (shift != null) out.push({id:'ai', name: AI.name_ko, short:'AI 랩 합산', color: AI.color, width: 3, bold: true, noEndLabel: xmode !== 'abs', pts: aiSrc.map(([x, v]) => [x - shift, v, 'interp'])});
+  return out;
+}
+const aiLastReal = [...AI.monthly_real].reverse().find(p => p[1] != null);
+function heroCfg(){
+  const basis = segVal($('#hero-x')), range = segVal($('#hero-r'));
+  const shift = basis === 'cross' ? AI.cross10 : AI.t0;
+  const xDomain = range === 'zoom' ? (basis === 'cross' ? [-5, 60] : [0, 60]) : null;
+  const callouts = [];
+  if (aiLastReal && shift != null) callouts.push({x: aiLastReal[0] - shift, y: aiLastReal[1], color: AI.color, dx: 16, dy: -26, text: AI.years_10_100 ? `AI 랩 합산 ${fmtB(aiLastReal[1])}\n$10B→$100B ${AI.years_10_100.toFixed(1)}년` : `AI 랩 합산 ${fmtB(aiLastReal[1])}`});
+  return {series: indSeries('real', basis), xDomain, callouts, xFmt: v => (v > 0 ? '+' : '') + yrFmt(v) + '년'};
+}
+const heroChart = new LineChart($('#c-hero'), Object.assign({ yMode:'log', markers:'none', animate:true, aria:'산업별 $10B 돌파 후 성장 곡선과 AI 비교', legendEl: $('#l-hero'), mobileLabels:'bold',
+  hiddenInit: ['ecom'], yFloor: 0.5, yFmt: v => fmtB(v), xTip: x => `${x >= 0 ? '+' : ''}${x.toFixed(1)}년`, annotations: [{y:10, text:''}, {y:100, text:''}],
+  height: (W, mob) => Math.round(Math.max(300, Math.min(560, W * (mob ? .95 : .55)))) }, heroCfg()));
+function heroNote(){ const m = segVal($('#hero-x')); $('#hero-note').innerHTML = m === 'cross' ? `0년 = 실질 연매출 $10B 첫 돌파. 가로축 왼쪽(음수)은 돌파 이전 구간. 곡선은 보고 연도 사이를 로그 보간했고, 철도 1850~1880·전력 1950 이후·자동차 전 구간은 근사치입니다. 전자상거래는 상품 거래액 성격이라 기본 숨김(범례에서 켤 수 있음).` : `0년 = 상용화 원년. 초기 수십 년은 기록이 없어 곡선이 중간부터 시작되는 산업이 있습니다.`; }
+seg($('#hero-x'), () => { heroChart.set(heroCfg()); heroNote(); }); seg($('#hero-r'), () => heroChart.set(heroCfg())); heroNote();
+
+const indAbs = new LineChart($('#c-ind-abs'), { series: indSeries('real', 'abs'), yMode:'log', markers:'none', aria:'산업별 연매출 절대 시간축', legendEl: $('#l-ind-abs'), yFloor: 0.001, yFmt: v => fmtB(v), mobileLabels:'bold',
+  xTicks: (a, b, mob) => autoTicks(a, b, mob ? 5 : 9).filter(Number.isInteger), xFmt: v => String(v), xTip: x => `${Math.round(x)}년` });
+seg($('#ind-unit'), v => { indAbs.set({series: indSeries(v, 'abs'), yFmt: unitFmt[v], labelFmt: unitFmt[v]}); $('#ind-abs-sub').textContent = v === 'gdp' ? '미국 명목 GDP 대비 비중 · 로그 스케일' : v === 'real' ? '실질 2024 USD · 로그 스케일' : '명목 USD · 로그 스케일'; });
+const indRel = new LineChart($('#c-ind-rel'), { series: indSeries('real', 't0'), yMode:'log', markers:'none', aria:'상용화 원년 기준 성장 곡선', legendEl: $('#l-ind-rel'), yFloor: 0.001, yFmt: v => fmtB(v), mobileLabels:'bold',
+  xFmt: v => (v > 0 ? '+' : '') + yrFmt(v) + '년', xTip: x => `원년 +${x.toFixed(1)}년`,
+  callouts: aiLastReal ? [{x: aiLastReal[0] - AI.t0, y: aiLastReal[1], color: AI.color, dx: 16, dy: -22, text: `AI 랩 합산 ${fmtB(aiLastReal[1])}\n원년(ChatGPT) +${(aiLastReal[0] - AI.t0).toFixed(1)}년`}] : [] });
+
+/* ---------------- rank strip & milestone table ---------------- */
+(function rankAndTable(){
+  const rows = IND.map(i => ({name: i.name_ko, yrs: i.years_10_100, cagr: i.cagr_10_100, c10: i.cross10, c100: i.cross100, flag: i.cross10_flag, mature: i.mature_year, peak: i.peak_year, peakReal: i.peak_real, lastReal: i.last_real, lastNom: i.last_nominal, lastGdp: i.last_gdp, lastYear: i.last_year, t0: i.t0, metric: i.metric_ko, ai:false}));
+  rows.push({name: 'AI 모델 랩 합산', yrs: AI.years_10_100, cagr: AI.cagr_10_100, c10: AI.cross10, c100: AI.cross100, flag:'', mature: null, peak: null, peakReal: AI.last_real, lastReal: AI.last_real, lastNom: AI.last_nominal, lastGdp: AI.last_gdp, lastYear: months[latest], t0: '2022.11', metric: AI.metric_ko, ai:true});
+  const ranked = rows.filter(r => r.yrs != null && !r.flag).sort((a, b) => a.yrs - b.yrs);
+  const flagged = rows.filter(r => r.flag);
+  $('#rank').innerHTML = `<span style="background:none;border:0;padding-left:0;color:var(--ink-3)">$10B → $100B 소요(실질):</span>` + ranked.map(r => `<span class="${r.ai ? 'ai' : ''}">${esc(r.name)} <b>${r.yrs < 10 ? r.yrs.toFixed(1) : r.yrs.toFixed(0)}년</b></span>`).join('') + flagged.map(r => `<span style="color:var(--ink-4)" title="시계열 시작 시점에 이미 $10B 초과">${esc(r.name)} <b style="color:var(--ink-4)">측정 불가*</b></span>`).join('') + (flagged.length ? `<span style="background:none;border:0;color:var(--ink-4);font-size:12px">* ${flagged.map(r => r.name).join('·')}: 기록 시작 시점(${flagged.map(r => Math.round(r.c10)).join('·')})에 이미 $10B 초과 — 기존 제품군 전환이라 출발점 정의가 어려움</span>` : '');
+  const yr = v => v == null ? '—' : (v === Math.round(v) ? String(v) : yrFmt(Math.round(v * 10) / 10));
+  const ymOf = v => v == null ? '—' : ymKo(decToYm(v + 0.0001));
+  let h = `<thead><tr><th style="text-align:left">산업</th><th>원년</th><th>$10B 도달</th><th>$100B 도달</th><th>소요 연수</th><th>구간 실질 CAGR</th><th>꺾임(10년 CAGR&lt;3%)</th><th>실질 정점</th><th>최근 실질</th><th>최근 명목</th><th>美 GDP 대비</th></tr></thead><tbody>`;
+  for (const r of rows) {
+    const c10 = r.ai ? ymOf(r.c10) : ((r.flag ? '≤' : '') + yr(r.c10)), c100 = r.ai ? ymOf(r.c100) : yr(r.c100);
+    const ended = !r.ai && !r.mature && Number(r.lastYear) < 2015;
+    h += `<tr class="${r.ai ? 'ai' : ''}"><td style="text-align:left" title="${esc(r.metric)}">${esc(r.name)}</td><td class="num">${esc(String(r.t0))}</td><td class="num">${c10}</td><td class="num">${c100}</td><td class="num">${r.yrs == null ? '—' : (r.flag ? '≤' : '') + (r.yrs < 10 ? r.yrs.toFixed(1) : r.yrs.toFixed(0)) + '년' + (r.flag ? '*' : '')}</td><td class="num">${r.cagr == null ? '—' : (r.flag ? '—' : r.cagr.toFixed(0) + '%/년')}</td><td class="num">${r.ai ? '—' : (r.mature ? r.mature + '년' : (ended ? '시계열 종료 (' + r.lastYear + ')' : '아직'))}</td><td class="num">${r.ai ? '—' : fmtB(r.peakReal) + ' (' + r.peak + ')'}</td><td class="num">${fmtB(r.lastReal)}</td><td class="num">${fmtB(r.lastNom)}</td><td class="num">${fmtPct(r.lastGdp)}</td></tr>`;
+  }
+  $('#t-mile').innerHTML = h + '</tbody>';
+  // insights
+  const fast = ranked.filter(r => !r.ai);
+  const oldest = fast.slice(-3).reverse(), newest = fast.slice(0, 3);
+  const aiY = AI.years_10_100;
+  $('#hero-insight').innerHTML = `<h3>이 그래프가 말하는 것</h3>
+    <p><b>속도.</b> 실질 $10B에서 $100B까지 가장 오래 걸린 산업은 ${oldest.map(r => `${r.name} ${r.yrs.toFixed(0)}년`).join(', ')}이었고, 인터넷 세대는 ${newest.map(r => `${r.name} ${r.yrs.toFixed(1)}년`).join(', ')}으로 줄었습니다. AI 모델 랩 합산은 ${aiY ? `<b>${aiY.toFixed(1)}년</b>` : '아직 $100B 미도달'}${AI.cross10 ? ` (${ymOf(AI.cross10)} → ${AI.cross100 ? ymOf(AI.cross100) : '진행 중'})` : ''}. 같은 10배를 역사상 가장 빠른 산업보다 몇 배 빠르게 통과했습니다.</p>
+    <p><b>왜 중요한가.</b> 과거 산업은 보급률이 50~70%에 이르면 성장률이 한 자릿수로 내려앉는 ‘꺾임’을 반복했습니다(표의 꺾임 연도 참조). 철도는 1916년 노선 길이 정점 이후 실질 매출이 100년 넘게 $100B 안팎에 머물렀고, 전력은 1980년대, 무선통신은 2013년 전후에 평탄화됐습니다. AI는 아직 꺾임의 징후가 없고 오히려 2026년에 가속했습니다. 다만 이 곡선의 ‘연료’가 고객 수요인지, 데이터센터 투자에 얹힌 공급 확대(팔 수 있는 용량만큼 팔리는 상태)인지에 따라 꺾임의 모양이 달라질 것입니다.</p>
+    <p><b>주의.</b> 전자상거래·스마트폰·자동차는 상품 거래액이라 같은 $100B라도 마진이 크게 다르고, AI ARR은 인식 매출보다 큽니다. 또 이 합산에는 Google·Microsoft 같은 빅테크의 AI 매출이 빠져 있어, 실제 ‘AI 산업’은 이 선보다 위에 있습니다.</p>`;
+  const top2 = K.share_top2, A = byId.anthropic.values[latest], O = byId.openai.values[latest];
+  $('#comp-insight').innerHTML = `<h3>읽는 법</h3>
+    <p>로그 축에서 <b>기울기가 곧 성장률</b>입니다. Anthropic의 기울기는 2025년 말 이후 더 가팔라졌고(2026년 2월 $14B → 7월 말 $65B, 5개월 만에 4.6배), OpenAI는 2026년 2~5월 $25B 부근에서 평평해졌다가 7~8월 다시 꺾여 올라갔습니다(7월 한 달 +20%, 8월 $40B 이상). 두 회사 모두 코딩 에이전트(Claude Code, Codex)가 가속의 주된 설명으로 거론됩니다.</p>
+    <p>중위권은 규모가 두 자릿수 작습니다. Mistral $0.4B, DeepSeek $0.45B, Moonshot $0.3B, Cohere $0.24B, xAI(Grok) 약 $0.5B로 상위 2개사의 1% 안팎이며, 이 격차가 2026년 들어 더 벌어졌습니다. Google은 추정치(${fmtUSD(byId.google.values[latest])}, 범위 약 $5.5~16B)로 3위권이지만 불확실성이 크고, Microsoft AI 런레이트 $37B는 Azure에서 판매되는 OpenAI·Anthropic 모델 소비와 Copilot을 합친 값이라 모델 랩 수치와 성격이 다릅니다.</p>
+    <p><b>한계.</b> 보고 시점 사이는 보간이므로 월별 값은 ‘그 달의 실제 ARR’이 아니라 추세선입니다. 회사별 ARR 정의가 다르고(OpenAI는 Microsoft 라이선스 수익 제외), 대부분 익명 소식통 보도입니다. IPO 서류(S-1)가 공개되면 수치가 수정될 수 있습니다.</p>`;
+  $('#tot-insight').innerHTML = `<h3>합산을 볼 때</h3>
+    <p>합산 ARR은 ${fmtUSD(K.total)}이고, 그중 Anthropic+OpenAI가 ${top2 ? top2.toFixed(0) : '—'}%입니다. 즉 ‘AI 모델 시장’의 총량은 사실상 두 회사의 곡선이며, 점유율 차트에서 보듯 2026년 4월 이후 Anthropic이 OpenAI를 앞질렀습니다(각 ${fmtUSD(A)} vs ${fmtUSD(O)}).</p>
+    <p>2배 소요 기간은 최근 6개월 기준 ${K.doubling_months ? K.doubling_months.toFixed(1) + '개월' : '—'}입니다. 이 속도가 유지되면 연말 합산은 $150B 안팎, 투자자들이 기대하는 Anthropic 연말 $100~120B(FT 보도) 시나리오와 대체로 정합합니다. 반대로 공급(컴퓨트) 제약, 가격 인하 경쟁(OpenAI·xAI·중국 오픈웨이트), 규제 이슈가 꺾임의 후보 요인입니다.</p>`;
+  const m = IND.filter(i => i.mature_year).map(i => `${i.name_ko} ${i.mature_year}년`).join(', ');
+  $('#ind-insight').innerHTML = `<h3>성숙기의 꺾임 — 무엇이 보이나</h3>
+    <ul>
+      <li><b>도달 속도는 세대마다 빨라졌습니다.</b> 철도·전력·전화는 40년대, 자동차 30년, 무선 10년대, 인터넷 광고 10년대 중반, 클라우드 8년, 스마트폰·전자상거래 5년, AI ${aiY ? aiY.toFixed(1) + '년' : '(진행 중)'}. 배경에는 유통망의 즉시성(인터넷)과 물리 인프라 없이 커지는 서비스 구조가 있습니다. AI는 오히려 물리 인프라(데이터센터)가 필요한데도 이 속도를 냈다는 점이 특이합니다.</li>
+      <li><b>꺾임의 패턴.</b> 10년 실질 CAGR 3% 미만으로 내려간 해: ${m}. 대체로 $100B(실질) 도달 후 20~40년 안에 왔고, 인터넷 세대는 더 짧았습니다(무선통신은 $100B 도달 후 약 12년). 꺾임 전에는 ‘과잉 투자 → 가격 하락 → 통합’(1890년대 철도, 2001년 통신·닷컴)이 반복됐습니다. AI에서 가격 하락(토큰 단가)은 이미 진행 중인데 매출이 더 빨리 늘고 있다는 점이 과거와 다른 신호입니다.</li>
+      <li><b>GDP 대비로 보면</b> 철도는 1880~1910년대 미국 GDP의 6~8%까지 갔고, 전력은 약 2~3%, 무선통신 1%대, 인터넷 광고 약 0.9%에서 움직입니다. AI 모델 랩 합산은 ${AI.last_gdp ? fmtPct(AI.last_gdp) : '—'}로 아직 작지만, 철도가 같은 비중에 이르는 데 수십 년이 걸렸습니다. 장기적으로 어느 산업의 비중에 수렴하는지가 이 트래커의 핵심 관전 포인트입니다.</li>
+    </ul>`;
+})();
+
+/* ---------------- changelog ---------------- */
+$('#changelog').innerHTML = D.changelog.map(c => `<li><span class="num">${esc(c.date)}</span> — ${esc(c.text)}</li>`).join('');
+})();
+</script>
+</body>
+</html>

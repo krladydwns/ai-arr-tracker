@@ -1,0 +1,64 @@
+date,company,annualized_revenue_usd,kind,source_label,source_url,note
+2026-08-13,OpenAI,40000000000,media,Bloomberg,https://www.bloomberg.com/news/articles/2026-08-13/openai-s-revenue-run-rate-tops-40-billion-ahead-of-ipo,'$40B 이상'. 7월 한 달 런레이트 +20% (Brockman 사내 공지)
+2026-07-31,Anthropic,65000000000,media,Bloomberg / CNBC / Reuters,https://www.bloomberg.com/news/articles/2026-08-17/anthropic-revenue-run-rate-surpasses-65-billion-ahead-of-ipo,"7월 말 $65B. 2026 Q2 매출 $11.5B(전년 $787M), Q1 $4.73B"
+2026-07-14,DeepSeek,450000000,media,The Information,https://www.theinformation.com/articles/deepseeks-annualized-revenue-nears-500-million-boosting-fundraise-ipo-plans,$400~500M 범위의 중간값
+2026-06-30,Google (Gemini),9200000000,estimate,자체 추정 (Alphabet Q2 2026),https://s206.q4cdn.com/479360582/files/doc_financials/2026/q2/2026q2-alphabet-earnings-release.pdf,API 22B 토큰/분 ≈ $4.6B + 구독 ≈ $3.0B + Enterprise ≈ $1.6B. 참고: Google Cloud 분기 매출 $24.8B(+82%)
+2026-06-30,xAI (Grok),500000000,estimate,Bloomberg 추정치 인용 (복수 매체),https://valueaddvc.com/blog/xai-valuation-2026-the-230b-series-e-the-125t-spacex-merger-and-what-grok-is-worth-today,"2026년 중반 약 $500M ARR(Grok 단독). 2025년 Grok 매출 ~$350M, 2026 목표 $2B. S-1: 2026 Q1 X+Grok 구독매출 증가분 연환산 ~$708M"
+2026-06-30,Moonshot AI (Kimi),300000000,media,Bloomberg,https://www.bloomberg.com/news/articles/2026-07-21/china-s-moonshot-in-talks-on-pre-ipo-funds-at-50-billion-value,
+2026-05-31,OpenAI,25000000000,estimate,복수 보도 (Reuters/FutureSearch/Epoch),https://futuresearch.ai/openai-financial-forecast/,2~5월 약 $25B 정체 구간 보도 종합
+2026-05-15,Anthropic,47000000000,disclosure,Anthropic (Series H),https://www.anthropic.com/news/series-h,5월 중 $47B 돌파 ($965B 밸류에이션)
+2026-04-30,Moonshot AI (Kimi),200000000,media,Bloomberg (HF Capital 성명),https://www.bloomberg.com/news/articles/2026-05-07/kimi-chatbot-maker-moonshot-ai-valued-at-20-billion-in-meituan-led-round,
+2026-04-06,Anthropic,30000000000,disclosure,Anthropic,https://www.anthropic.com/news/google-broadcom-partnership-compute,$30B 돌파
+2026-03-31,Google (Gemini),6900000000,estimate,자체 추정 (Alphabet Q1 2026),https://s206.q4cdn.com/479360582/files/doc_financials/2026/q1/2026q1-alphabet-earnings-release.pdf,API 16B 토큰/분 ≈ $3.4B + 구독 ≈ $2.4B + Enterprise 8M 시트 ≈ $1.1B
+2026-03-31,Microsoft AI,37000000000,disclosure,Microsoft FY26 Q3 (8-K),https://www.microsoft.com/en-us/investor/events/fy-2026/earnings-fy-2026-q3,+123% YoY → 2025년 3월 약 $16.6B 역산
+2026-03-03,Anthropic,19000000000,media,Bloomberg,https://www.bloomberg.com/news/articles/2026-03-03/anthropic-nears-20-billion-revenue-run-rate-amid-pentagon-feud,CEO 컨퍼런스 발언으로 확인
+2026-02-28,OpenAI,25000000000,media,The Information,https://www.theinformation.com/articles/openai-tops-25-billion-annualized-revenue-anthropic-narrows-gap,2월 말 $25B 돌파. 회사는 3/31 '월 $2B' 확인
+2026-02-12,Anthropic,14000000000,disclosure,Anthropic (Series G),https://www.anthropic.com/news/anthropic-raises-30-billion-series-g-funding-380-billion-post-money-valuation,3년 연속 연 10배 성장
+2026-01-31,Mistral AI,400000000,disclosure,FT (CEO),https://www.ft.com/content/664249e7-e8d5-4425-b397-ad3ed590b305,"'$400M 이상', 1년 새 20배"
+2025-12-31,Anthropic,9000000000,media,Bloomberg,https://www.bloomberg.com/news/articles/2026-01-21/anthropic-s-revenue-run-rate-tops-9-billion-as-vcs-pile-in,2025년 말 $9B 이상
+2025-12-31,OpenAI,21400000000,media,The Information / OpenAI ($20B+),https://www.theinformation.com/articles/openai-tops-25-billion-annualized-revenue-anthropic-narrows-gap,2025년 말 $21.4B (CFO: '$20B 이상')
+2025-12-31,Google (Gemini),4300000000,estimate,자체 추정 (Alphabet 실적 입력값),https://s206.q4cdn.com/479360582/files/doc_financials/2026/q1/2026q1-alphabet-earnings-release.pdf,API 10B 토큰/분 ≈ $2.1B + 구독 ≈ $1.8B + Enterprise 시트 ≈ $0.4B
+2025-12-31,Cohere,240000000,media,CNBC (투자자 메모),https://www.cnbc.com/2026/02/13/ai-startup-cohere-revenue-ipo.html,2025년 목표 $200M 초과 달성
+2025-12-18,OpenAI,19000000000,media,The Information,https://www.theinformation.com/articles/openais-organizational-problems-hurt-chatgpt,
+2025-10-21,Anthropic,7000000000,disclosure,Anthropic,https://www.anthropic.com/news/statement-dario-amodei-american-ai-leadership,9개월 만에 $1B→$7B
+2025-10-20,Cohere,150000000,disclosure,Cohere via Bloomberg,https://www.bloomberg.com/news/articles/2025-10-20/nvidia-backed-cohere-to-offer-secondary-sale-of-employee-shares,
+2025-10-01,Z.ai (Zhipu),153000000,media,Bloomberg (2025 하반기 연환산),https://www.bloomberg.com/news/articles/2026-03-31/zhipu-s-losses-climb-60-after-chinese-ai-rivalry-worsens,
+2025-09-30,Google (Gemini),2700000000,estimate,자체 추정 (Alphabet 실적 입력값),https://s206.q4cdn.com/479360582/files/doc_financials/2026/q2/2026q2-alphabet-earnings-release.pdf,API 7B 토큰/분 × $0.40/M ≈ $1.5B + 구독 ≈ $1.2B
+2025-09-30,xAI (Grok),428000000,media,Bloomberg (분기매출 $107M×4),https://www.bloomberg.com/news/articles/2026-01-09/musk-s-xai-reports-higher-quarterly-loss-plans-to-power-optimus,분기 순손실 $1.46B
+2025-09-30,Mistral AI,350000000,media,Sacra / 회사 (€300M ARR),https://sacra.com/c/mistral/,연환산 계약액 ~$325M
+2025-08-01,OpenAI,13000000000,media,NYT DealBook,https://www.nytimes.com/2025/08/01/business/dealbook/openai-ai-mega-funding-deal.html,
+2025-07-30,OpenAI,12000000000,disclosure,OpenAI CFO / The Information,https://www.cnbc.com/2025/08/20/openai-compute-ai.html,7월 첫 월매출 $1B 달성
+2025-07-29,Anthropic,5000000000,disclosure,Anthropic (Series F),https://www.anthropic.com/news/anthropic-raises-series-f-at-usd183b-post-money-valuation,"7월 말 ~$5B (Bloomberg), 8월 '$5B 이상' (회사)"
+2025-07-01,Anthropic,4000000000,media,The Information,https://www.theinformation.com/articles/anthropic-revenue-hits-4-billion-annual-pace-competition-cursor-intensifies,
+2025-06-30,xAI (Grok),236000000,media,Bloomberg (분기매출 $59M×4),https://www.bloomberg.com/news/articles/2026-01-09/musk-s-xai-reports-higher-quarterly-loss-plans-to-power-optimus,
+2025-06-11,Mistral AI,100000000,disclosure,WSJ (CEO),https://www.wsj.com/tech/ai/fears-over-u-s-ai-dominance-boost-business-for-frances-mistral-14405419,
+2025-06-09,OpenAI,10000000000,disclosure,OpenAI via CNBC,https://www.cnbc.com/2025/06/09/openai-hits-10-billion-in-annualized-revenue-fueled-by-chatgpt-growth.html,
+2025-05-30,Anthropic,3000000000,media,CNBC,https://www.cnbc.com/2025/05/30/anthropic-hits-3-billion-in-annualized-revenue-on-business-demand-for-ai.html,
+2025-05-15,Cohere,100000000,media,Reuters,https://finance.yahoo.com/news/ai-firm-cohere-doubles-annualized-203247578.html,
+2025-04-01,Z.ai (Zhipu),53300000,disclosure,HKEX 투자설명서 (2025 상반기 연환산),https://www1.hkexnews.hk/app/sehk/2025/107977/a128413/sehk25121901755.pdf,
+2025-03-31,Anthropic,2000000000,disclosure,Anthropic via CNBC,https://www.cnbc.com/2025/05/16/anthropic-ai-credit-facility.html,1분기 말 $2B (회사 확인)
+2025-03-31,xAI (Grok),172000000,media,Bloomberg (분기매출 $43M×4),https://www.bloomberg.com/news/articles/2026-01-09/musk-s-xai-reports-higher-quarterly-loss-plans-to-power-optimus,분기 매출 연환산
+2025-03-01,Anthropic,1400000000,media,The Information,https://www.theinformation.com/articles/anthropics-claude-drives-strong-revenue-growth-while-powering-manus-sensation,
+2025-02-24,Cohere,70000000,media,The Information,https://www.theinformation.com/articles/cohere-boosts-revenue-pace-to-70-million-on-overseas-growth,
+2025-01-31,Mistral AI,20000000,media,"FT (CEO 인터뷰, '1년 전 $20M')",https://www.ft.com/content/664249e7-e8d5-4425-b397-ad3ed590b305,
+2025-01-29,Microsoft AI,13000000000,disclosure,Microsoft FY25 Q2 (CEO),https://www.techradar.com/pro/microsoft-reveals-massive-financial-growth-once-again-cloud-and-ai-lead-the-way,+175% YoY
+2024-12-31,Anthropic,1000000000,media,CNBC,https://www.cnbc.com/2025/01/22/google-agrees-to-new-1-billion-investment-in-anthropic.html,2024년 12월 연환산 $1B
+2024-12-31,OpenAI,6000000000,disclosure,OpenAI,https://openai.com/index/a-business-that-scales-with-the-value-of-intelligence/,회사: '2024년 $6B'. CNBC는 $5.5B 보도
+2024-11-20,xAI (Grok),100000000,media,WSJ,https://www.wsj.com/tech/ai/elon-musks-startup-xai-valued-at-50-billion-in-new-funding-round-7e3669dc,
+2024-10-30,Microsoft AI,10000000000,disclosure,Microsoft FY25 Q1,https://www.microsoft.com/en-us/investor/earnings/fy-2025-q1/press-release-webcast,
+2024-10-01,Z.ai (Zhipu),37500000,disclosure,HKEX 투자설명서 (2024 하반기 연환산),https://www1.hkexnews.hk/app/sehk/2025/107977/a128413/sehk25121901755.pdf,
+2024-09-12,OpenAI,4000000000,media,WSJ,https://www.wsj.com/tech/ai/united-arab-emirates-fund-in-talks-to-invest-in-openai-fd4e4977,
+2024-08-15,OpenAI,3600000000,media,NYT,https://www.nytimes.com/2024/09/27/technology/openai-chatgpt-investors-funding.html,8월 월매출 $300M
+2024-06-12,OpenAI,3400000000,media,The Information,https://www.theinformation.com/articles/openais-annualized-revenue-doubles-to-3-4-billion-since-late-2023,
+2024-04-01,Z.ai (Zhipu),12400000,disclosure,HKEX 투자설명서 (2024 상반기 연환산),https://www1.hkexnews.hk/app/sehk/2025/107977/a128413/sehk25121901755.pdf,
+2024-03-15,Cohere,22000000,media,Reuters,https://finance.yahoo.com/news/exclusive-ai-startup-cohere-seeks-042607354.html,
+2024-01-01,Anthropic,87000000,disclosure,Anthropic,https://www.anthropic.com/news/anthropic-expands-global-leadership-in-enterprise-ai-naming-chris-ciauri-as-managing-director-of,2024년 초 런레이트 $87M (회사 발표)
+2023-12-31,OpenAI,2000000000,disclosure,OpenAI / FT,https://openai.com/index/a-business-that-scales-with-the-value-of-intelligence/,회사: '2023년 $2B ARR'. The Information은 12월 $1.6B 보도
+2023-12-31,Cohere,13000000,media,Reuters,https://finance.yahoo.com/news/exclusive-ai-startup-cohere-seeks-042607354.html,
+2023-10-10,OpenAI,1300000000,media,The Information,https://www.theinformation.com/articles/openais-revenue-crossed-1-3-billion-annualized-rate-ceo-tells-staff,
+2023-10-01,Anthropic,100000000,media,The Information,https://www.theinformation.com/articles/openai-rival-anthropic-in-talks-to-raise-2-billion-from-google-others-as-ai-arms-race-accelerates,투자자 대상 '연환산 $100M' 언급
+2023-08-29,OpenAI,1000000000,media,The Information,https://www.theinformation.com/articles/openai-passes-1-billion-revenue-pace-as-big-companies-boost-ai-spending,
+2023-07-01,Z.ai (Zhipu),17600000,disclosure,HKEX 투자설명서 (2023 매출 연환산),https://www1.hkexnews.hk/app/sehk/2025/107977/a128413/sehk25121901755.pdf,
+2023-03-01,OpenAI,200000000,media,The Information,https://www.theinformation.com/articles/openais-losses-doubled-to-540-million-as-it-developed-chatgpt,'수억 달러' 페이스 (ChatGPT Plus 출시 직후)
+2022-12-31,OpenAI,35000000,derived,The Information (2022 매출 $28M 기반 추정),https://www.theinformation.com/articles/openai-passes-1-billion-revenue-pace-as-big-companies-boost-ai-spending,2022년 연간 매출 $28M → 연말 런레이트 추정
+2022-07-01,Z.ai (Zhipu),8600000,disclosure,HKEX 투자설명서 (2022 매출 연환산),https://www1.hkexnews.hk/app/sehk/2025/107977/a128413/sehk25121901755.pdf,

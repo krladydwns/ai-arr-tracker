@@ -1,0 +1,71 @@
+# 매월 1일 00:15 UTC(한국 09:15)에 데이터 갱신 → 빌드 → GitHub Pages 배포
+# 저장소 Settings → Pages → Source 를 "GitHub Actions" 로 설정해야 합니다.
+name: monthly-update-and-deploy
+
+on:
+  schedule:
+    - cron: "15 0 1 * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Monthly data refresh (schedule / manual only)
+        if: github.event_name != 'push'
+        run: python3 scripts/update_monthly.py
+
+      - name: Build site
+        run: python3 build.py
+
+      - name: Commit refreshed data (schedule / manual only)
+        if: github.event_name != 'push'
+        run: |
+          git config user.name "arr-tracker-bot"
+          git config user.email "arr-tracker-bot@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || git commit -m "monthly update $(date -u +%Y-%m-%d)"
+          git push
+
+      - name: Configure Pages (auto-enable if needed)
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+        continue-on-error: true
+
+      - name: Prepare Pages artifact
+        run: |
+          mkdir -p _site
+          cp index.html _site/
+          cp -r exports _site/
+          cp data.json computed.json _site/
+          touch _site/.nojekyll
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
