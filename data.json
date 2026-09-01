@@ -2,9 +2,9 @@
   "meta": {
     "title": "AI 모델 기업 ARR 트래커",
     "version": "1.0.0",
-    "last_updated": "2026-08-21",
+    "last_updated": "2026-09-01",
     "data_through": "2026-08",
-    "next_update": "2026-09-01",
+    "next_update": "2026-10-01",
     "grid_start": "2022-12",
     "base_year_real": 2024
   },
@@ -618,6 +618,15 @@
           "src": "https://www.bloomberg.com/news/articles/2026-03-31/zhipu-s-losses-climb-60-after-chinese-ai-rivalry-worsens",
           "src_label": "Bloomberg (2025 하반기 연환산)",
           "note": ""
+        },
+        {
+          "date": "2026-08-31",
+          "value": 1600000000.0,
+          "kind": "media",
+          "src": "https://www.scmp.com/tech/big-tech/article/3365870/chinas-zai-revenue-jumps-400-total-losses-narrow-explosive-cloud-gains",
+          "src_label": "Epoch AI 데이터셋 경유 (자동 수집)",
+          "note": "[자동 수집 — 검토 필요] Annual recurring revenue (ARR) / SCMP reporting on Z.ai earnings: \n\"Beyond its first-half results, Z.ai said that its annual recurring revenue (ARR) – a key metric that projects current monthly",
+          "review": true
         }
       ]
     },
@@ -1682,6 +1691,10 @@
     "2026": 31800.0
   },
   "changelog": [
+    {
+      "date": "2026-09-01",
+      "text": "자동 수집: Z.ai (Zhipu) 2026-08-31 $1.60B (검토 필요)"
+    },
     {
       "date": "2026-08-21",
       "text": "v1.0 최초 공개. Anthropic $65B(7월말), OpenAI $40B(8월) 반영. 산업 비교 10개 시계열 수록."

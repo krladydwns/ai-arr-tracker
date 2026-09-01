@@ -1,4 +1,6 @@
 date,company,annualized_revenue_usd,kind,source_label,source_url,note
+2026-08-31,Z.ai (Zhipu),1600000000,media,Epoch AI 데이터셋 경유 (자동 수집),https://www.scmp.com/tech/big-tech/article/3365870/chinas-zai-revenue-jumps-400-total-losses-narrow-explosive-cloud-gains,"[자동 수집 — 검토 필요] Annual recurring revenue (ARR) / SCMP reporting on Z.ai earnings: 
+""Beyond its first-half results, Z.ai said that its annual recurring revenue (ARR) – a key metric that projects current monthly"
 2026-08-13,OpenAI,40000000000,media,Bloomberg,https://www.bloomberg.com/news/articles/2026-08-13/openai-s-revenue-run-rate-tops-40-billion-ahead-of-ipo,'$40B 이상'. 7월 한 달 런레이트 +20% (Brockman 사내 공지)
 2026-07-31,Anthropic,65000000000,media,Bloomberg / CNBC / Reuters,https://www.bloomberg.com/news/articles/2026-08-17/anthropic-revenue-run-rate-surpasses-65-billion-ahead-of-ipo,"7월 말 $65B. 2026 Q2 매출 $11.5B(전년 $787M), Q1 $4.73B"
 2026-07-14,DeepSeek,450000000,media,The Information,https://www.theinformation.com/articles/deepseeks-annualized-revenue-nears-500-million-boosting-fundraise-ipo-plans,$400~500M 범위의 중간값
