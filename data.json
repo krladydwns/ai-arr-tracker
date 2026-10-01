@@ -2,9 +2,9 @@
   "meta": {
     "title": "AI 모델 기업 ARR 트래커",
     "version": "1.0.0",
-    "last_updated": "2026-09-01",
-    "data_through": "2026-08",
-    "next_update": "2026-10-01",
+    "last_updated": "2026-10-01",
+    "data_through": "2026-09",
+    "next_update": "2026-11-01",
     "grid_start": "2022-12",
     "base_year_real": 2024
   },
@@ -286,6 +286,15 @@
           "src": "https://www.bloomberg.com/news/articles/2026-08-13/openai-s-revenue-run-rate-tops-40-billion-ahead-of-ipo",
           "src_label": "Bloomberg",
           "note": "'$40B 이상'. 7월 한 달 런레이트 +20% (Brockman 사내 공지)"
+        },
+        {
+          "date": "2026-09-29",
+          "value": 70000000000.0,
+          "kind": "media",
+          "src": "https://www.ft.com/content/211d10ae-cf9e-481d-99ed-0321d2eb0676?syn-25a6b1a6=1",
+          "src_label": "Epoch AI 데이터셋 경유 (자동 수집)",
+          "note": "[자동 수집 — 검토 필요] Annualized run rate / OpenAI run rate was \"nearing\" 70B (Axios) or \"about\" 70B (FT) as of September 29. So 70B may be rounded up, but only slightly.",
+          "review": true
         }
       ]
     },
@@ -446,6 +455,15 @@
           "src": "https://www.ft.com/content/664249e7-e8d5-4425-b397-ad3ed590b305",
           "src_label": "FT (CEO)",
           "note": "'$400M 이상', 1년 새 20배"
+        },
+        {
+          "date": "2026-09-08",
+          "value": 1000000000.0,
+          "kind": "media",
+          "src": "https://www.wsj.com/tech/ai/mistral-ai-exceeds-24-billion-valuation-after-samsung-led-investment-round-ea377b82",
+          "src_label": "Epoch AI 데이터셋 경유 (자동 수집)",
+          "note": "[자동 수집 — 검토 필요] Annual recurring revenue (ARR) / \"slightly above\" $1 billion USD. CFO statement to WSJ:\n\n\"Being three years in, I think we have a pretty good trajectory,” [Mistral CFO Johan] Bergqvist said, ad",
+          "review": true
         }
       ]
     },
@@ -530,6 +548,15 @@
             400000000.0,
             500000000.0
           ]
+        },
+        {
+          "date": "2026-09-24",
+          "value": 1000000000.0,
+          "kind": "media",
+          "src": "https://www.theinformation.com/articles/deepseeks-annualized-revenue-hits-1-billion-startup-finalizes-7-5-billion-fundraising?rc=9mzoog",
+          "src_label": "Epoch AI 데이터셋 경유 (자동 수집)",
+          "note": "[자동 수집 — 검토 필요] Annualized run rate / \"DeepSeek’s annualized revenue run rate has hit $1 billion, more than double from less than $500 million a few months ago... according to two people with direct",
+          "review": true
         }
       ]
     },
@@ -558,6 +585,15 @@
           "src": "https://www.bloomberg.com/news/articles/2026-07-21/china-s-moonshot-in-talks-on-pre-ipo-funds-at-50-billion-value",
           "src_label": "Bloomberg",
           "note": ""
+        },
+        {
+          "date": "2026-08-31",
+          "value": 1000000000.0,
+          "kind": "media",
+          "src": "https://www.bloomberg.com/news/articles/2026-09-11/china-ai-star-moonshot-eyes-2-billion-annualized-sales-in-2026",
+          "src_label": "Epoch AI 데이터셋 경유 (자동 수집)",
+          "note": "[자동 수집 — 검토 필요] Annual recurring revenue (ARR) / \"The Chinese AI developer recently told investors its annual recurring revenue — a gauge of forward-looking sales — topped $1 billion in August, up from $300 mi",
+          "review": true
         }
       ]
     },
@@ -1691,6 +1727,10 @@
     "2026": 31800.0
   },
   "changelog": [
+    {
+      "date": "2026-10-01",
+      "text": "자동 수집: OpenAI 2026-09-29 $70.00B, DeepSeek 2026-09-24 $1.00B, Mistral AI 2026-09-08 $1.00B, Moonshot AI (Kimi) 2026-08-31 $1.00B (검토 필요)"
+    },
     {
       "date": "2026-09-01",
       "text": "자동 수집: Z.ai (Zhipu) 2026-08-31 $1.60B (검토 필요)"

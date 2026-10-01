@@ -1,4 +1,10 @@
 date,company,annualized_revenue_usd,kind,source_label,source_url,note
+2026-09-29,OpenAI,70000000000,media,Epoch AI 데이터셋 경유 (자동 수집),https://www.ft.com/content/211d10ae-cf9e-481d-99ed-0321d2eb0676?syn-25a6b1a6=1,"[자동 수집 — 검토 필요] Annualized run rate / OpenAI run rate was ""nearing"" 70B (Axios) or ""about"" 70B (FT) as of September 29. So 70B may be rounded up, but only slightly."
+2026-09-24,DeepSeek,1000000000,media,Epoch AI 데이터셋 경유 (자동 수집),https://www.theinformation.com/articles/deepseeks-annualized-revenue-hits-1-billion-startup-finalizes-7-5-billion-fundraising?rc=9mzoog,"[자동 수집 — 검토 필요] Annualized run rate / ""DeepSeek’s annualized revenue run rate has hit $1 billion, more than double from less than $500 million a few months ago... according to two people with direct"
+2026-09-08,Mistral AI,1000000000,media,Epoch AI 데이터셋 경유 (자동 수집),https://www.wsj.com/tech/ai/mistral-ai-exceeds-24-billion-valuation-after-samsung-led-investment-round-ea377b82,"[자동 수집 — 검토 필요] Annual recurring revenue (ARR) / ""slightly above"" $1 billion USD. CFO statement to WSJ:
+
+""Being three years in, I think we have a pretty good trajectory,” [Mistral CFO Johan] Bergqvist said, ad"
+2026-08-31,Moonshot AI (Kimi),1000000000,media,Epoch AI 데이터셋 경유 (자동 수집),https://www.bloomberg.com/news/articles/2026-09-11/china-ai-star-moonshot-eyes-2-billion-annualized-sales-in-2026,"[자동 수집 — 검토 필요] Annual recurring revenue (ARR) / ""The Chinese AI developer recently told investors its annual recurring revenue — a gauge of forward-looking sales — topped $1 billion in August, up from $300 mi"
 2026-08-31,Z.ai (Zhipu),1600000000,media,Epoch AI 데이터셋 경유 (자동 수집),https://www.scmp.com/tech/big-tech/article/3365870/chinas-zai-revenue-jumps-400-total-losses-narrow-explosive-cloud-gains,"[자동 수집 — 검토 필요] Annual recurring revenue (ARR) / SCMP reporting on Z.ai earnings: 
 ""Beyond its first-half results, Z.ai said that its annual recurring revenue (ARR) – a key metric that projects current monthly"
 2026-08-13,OpenAI,40000000000,media,Bloomberg,https://www.bloomberg.com/news/articles/2026-08-13/openai-s-revenue-run-rate-tops-40-billion-ahead-of-ipo,'$40B 이상'. 7월 한 달 런레이트 +20% (Brockman 사내 공지)
